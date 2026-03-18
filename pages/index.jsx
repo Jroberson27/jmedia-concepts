@@ -15,9 +15,9 @@ const C = {
 };
 
 const FONT = {
-  display: "'Cormorant Garamond', Georgia, serif",
-  body:    "'DM Sans', system-ui, sans-serif",
-  mono:    "'DM Mono', monospace",
+  display: "'Raleway', system-ui, sans-serif",
+  body:    "'Nunito', system-ui, sans-serif",
+  mono:    "'Raleway', system-ui, sans-serif",
 };
 
 const OTA_STATS = [
@@ -87,7 +87,7 @@ export default function ConceptPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600&family=Nunito:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { background: ${C.black}; color: ${C.white}; font-family: ${FONT.body}; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
         ::selection { background: ${C.coral}; color: ${C.white}; }
