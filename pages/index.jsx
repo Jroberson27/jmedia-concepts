@@ -107,7 +107,7 @@ export default function ConceptPage() {
 function LoadingScreen() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 32 }}>
-      <img src="/jmedia-logo.png" alt="JMEDIA" style={{ height: 56, animation: "float 3s ease infinite" }} />
+      <img src="/jmedia-logo.png" alt="JMEDIA" style={{ height: 56, mixBlendMode: "screen", animation: "float 3s ease infinite" }} />
       <div style={{ display: "flex", gap: 8 }}>
         {[0,1,2].map(i => <div key={i} style={{ width: 5, height: 5, borderRadius: "50%", background: C.coral, animation: "pulse 1.2s ease " + (i * 0.2) + "s infinite" }} />)}
       </div>
@@ -119,7 +119,7 @@ function LoadingScreen() {
 function ErrorScreen({ message }) {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20, padding: "0 24px", textAlign: "center" }}>
-      <img src="/jmedia-logo.png" alt="JMEDIA" style={{ height: 44, opacity: 0.7 }} />
+      <img src="/jmedia-logo.png" alt="JMEDIA" style={{ height: 44, opacity: 0.7, mixBlendMode: "screen" }} />
       <p style={{ color: C.muted, fontSize: 14 }}>{message || "Something went wrong."}</p>
     </div>
   );
@@ -249,7 +249,7 @@ function ConceptView({ data, gated, onUngate }) {
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: C.coral }} />
 
         <nav style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "28px 48px", borderBottom: "1px solid " + C.border + "22" }}>
-          <img src="/jmedia-logo.png" alt="JMEDIA Productions" style={{ height: 52 }} />
+          <img src="/jmedia-logo.png" alt="JMEDIA Productions" style={{ height: 52, mixBlendMode: "screen" }} />
           <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
             <span style={{ fontFamily: FONT.mono, fontSize: 10, color: C.muted, letterSpacing: "0.1em" }}>Content Concept</span>
             <div style={{ width: 1, height: 14, background: C.border }} />
@@ -385,7 +385,7 @@ function ConceptView({ data, gated, onUngate }) {
 
       {/* FOOTER */}
       <footer style={{ borderTop: "1px solid " + C.border, padding: "32px 48px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <img src="/jmedia-logo.png" alt="JMEDIA Productions" style={{ height: 32, opacity: 0.55 }} />
+        <img src="/jmedia-logo.png" alt="JMEDIA Productions" style={{ height: 32, opacity: 0.55, mixBlendMode: "screen" }} />
         <span style={{ fontFamily: FONT.mono, fontSize: 10, color: C.muted, letterSpacing: "0.06em" }}>
           Confidential / {contact.company} / {new Date().getFullYear()}
         </span>
