@@ -324,7 +324,7 @@ function ConceptView({ data, gated, onUngate }) {
       {/* DIRECTIONS */}
       <div style={{ padding: "100px 48px", maxWidth: 860, margin: "0 auto" }}>
         <div ref={directionsRef} style={directionsStyle}>
-          <SectionLabel>Content directions</SectionLabel>
+          <SectionLabel>Signature Storylines</SectionLabel>
           <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 28 }}>
             {concept.content_directions.map((dir, i) => <DirectionCard key={i} index={i + 1} direction={dir} />)}
           </div>
