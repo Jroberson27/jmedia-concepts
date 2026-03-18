@@ -183,6 +183,57 @@ function DirectionCard({ index, direction }) {
   );
 }
 
+function RetainerPhase({ phase, index }) {
+  const [open, setOpen] = useState(index === 0);
+  const phaseColors = ["#E8625A", "#C4524B", "#A04440"];
+  const color = phaseColors[index] || C.coral;
+
+  return (
+    <div style={{ background: C.card, border: "1px solid " + C.border, overflow: "hidden" }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "24px 28px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, textAlign: "left" }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 20, flex: 1 }}>
+          <div style={{ flexShrink: 0 }}>
+            <div style={{ fontFamily: FONT.mono, fontSize: 9, color: color, letterSpacing: "0.1em", marginBottom: 4 }}>{phase.phase}</div>
+            <div style={{ fontFamily: FONT.mono, fontSize: 9, color: C.muted, letterSpacing: "0.06em" }}>{phase.months}</div>
+          </div>
+          <div style={{ width: 1, height: 32, background: C.border, flexShrink: 0 }} />
+          <div>
+            <div style={{ fontSize: 17, fontWeight: 500, color: C.white, marginBottom: 3 }}>{phase.storyline}</div>
+            <div style={{ fontSize: 12, color: C.muted, fontWeight: 300 }}>{phase.goal}</div>
+          </div>
+        </div>
+        <span style={{ fontSize: 18, color: C.muted, transform: open ? "rotate(45deg)" : "rotate(0)", transition: "transform 0.25s ease", flexShrink: 0, lineHeight: 1 }}>+</span>
+      </button>
+
+      <div style={{ maxHeight: open ? "400px" : "0", overflow: "hidden", transition: "max-height 0.35s ease" }}>
+        <div style={{ padding: "0 28px 28px", borderTop: "1px solid " + C.border }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, marginTop: 20 }}>
+            <div style={{ background: C.black, border: "1px solid " + C.border, padding: "18px 20px" }}>
+              <div style={{ fontFamily: FONT.mono, fontSize: 9, color: color, letterSpacing: "0.1em", marginBottom: 10 }}>Strategic focus</div>
+              <p style={{ fontSize: 13, color: "#888", lineHeight: 1.75, fontWeight: 300 }}>{phase.focus}</p>
+            </div>
+            <div style={{ background: C.black, border: "1px solid " + C.border, padding: "18px 20px" }}>
+              <div style={{ fontFamily: FONT.mono, fontSize: 9, color: C.muted, letterSpacing: "0.1em", marginBottom: 10 }}>Deliverables</div>
+              <p style={{ fontSize: 13, color: "#888", lineHeight: 1.75, fontWeight: 300 }}>{phase.output}</p>
+            </div>
+          </div>
+          {index < 2 && (
+            <div style={{ marginTop: 12, padding: "10px 16px", background: color + "0D", border: "1px solid " + color + "33", display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 4, height: 4, borderRadius: "50%", background: color, flexShrink: 0 }} />
+              <span style={{ fontFamily: FONT.mono, fontSize: 9, color: color, letterSpacing: "0.08em" }}>
+                Builds into Phase {index + 2}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function GateSection({ gated, onUngate, hotel }) {
   const inner = (
     <div style={{ textAlign: "center" }}>
@@ -228,7 +279,10 @@ function GateSection({ gated, onUngate, hotel }) {
 }
 
 function ConceptView({ data, gated, onUngate }) {
-  const { contact, concept, scoring } = data;
+  const { contact, concept, scoring, propertyImages = [] } = data;
+  const heroImage = propertyImages[0] || null;
+  const breakImage = propertyImages[1] || propertyImages[0] || null;
+  const galleryImages = propertyImages.slice(0, 4);
   const otaLevel = scoring.ota || "Medium";
 
   const [heroRef, heroStyle]           = useFadeUp(0);
@@ -244,7 +298,7 @@ function ConceptView({ data, gated, onUngate }) {
 
       {/* HERO */}
       <div style={{ position: "relative", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1600&q=80&fit=crop')", backgroundSize: "cover", backgroundPosition: "center", filter: "brightness(0.15) saturate(0.3)" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: heroImage ? `url(${heroImage})` : "url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1600&q=80&fit=crop')", backgroundSize: "cover", backgroundPosition: "center", filter: "brightness(0.15) saturate(0.3)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, " + C.black + "00 0%, " + C.black + "BB 55%, " + C.black + " 100%)" }} />
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: C.coral }} />
 
@@ -310,9 +364,36 @@ function ConceptView({ data, gated, onUngate }) {
         </div>
       </div>
 
+      {/* PROPERTY IMAGE GALLERY */}
+      {galleryImages.length > 1 && (
+        <div style={{ padding: "0 48px 80px", maxWidth: 860, margin: "0 auto" }}>
+          <div style={{ display: "grid", gridTemplateColumns: galleryImages.length >= 3 ? "2fr 1fr 1fr" : "1fr 1fr", gap: 2 }}>
+            {galleryImages.map((img, i) => (
+              <div key={i} style={{
+                aspectRatio: i === 0 ? "16/10" : "4/3",
+                overflow: "hidden",
+                position: "relative",
+                gridRow: i === 0 && galleryImages.length >= 3 ? "1 / 3" : "auto",
+              }}>
+                <img
+                  src={img}
+                  alt={contact.company + " property image " + (i + 1)}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.85) saturate(0.9)", transition: "transform 0.5s ease, filter 0.3s ease", display: "block" }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.03)"; e.currentTarget.style.filter = "brightness(0.95) saturate(1.1)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.filter = "brightness(0.85) saturate(0.9)"; }}
+                />
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 8, fontFamily: FONT.mono, fontSize: 9, color: C.muted, letterSpacing: "0.08em", textAlign: "right" }}>
+            Images from {contact.website || contact.company}
+          </div>
+        </div>
+      )}
+
       {/* CINEMATIC BREAK */}
       <div style={{ position: "relative", height: 300, overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1600&q=80&fit=crop')", backgroundSize: "cover", backgroundPosition: "center 40%", filter: "brightness(0.18) saturate(0.4)" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: breakImage ? `url(${breakImage})` : "url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1600&q=80&fit=crop')", backgroundSize: "cover", backgroundPosition: "center 40%", filter: "brightness(0.18) saturate(0.4)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, " + C.black + " 0%, transparent 35%, transparent 65%, " + C.black + " 100%)" }} />
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <p style={{ fontFamily: FONT.display, fontSize: "clamp(20px, 3.5vw, 36px)", fontWeight: 300, color: C.white, textAlign: "center", maxWidth: 580, lineHeight: 1.5, padding: "0 24px", letterSpacing: "0.02em", fontStyle: "italic" }}>
@@ -343,11 +424,31 @@ function ConceptView({ data, gated, onUngate }) {
               </div>
             ))}
           </div>
-          <div style={{ marginTop: 2, background: C.card, border: "1px solid " + C.border, padding: "22px 28px", display: "flex", gap: 20, alignItems: "center" }}>
-            <div style={{ fontFamily: FONT.mono, fontSize: 10, color: C.muted, letterSpacing: "0.1em", flexShrink: 0 }}>Timeline</div>
-            <div style={{ width: 1, height: 14, background: C.border, flexShrink: 0 }} />
-            <p style={{ fontSize: 13, color: C.white, lineHeight: 1.7, fontWeight: 300 }}>{concept.timeline}</p>
-          </div>
+        </div>
+      </div>
+
+      {/* 6-MONTH RETAINER TIMELINE */}
+      <div style={{ padding: "100px 48px", maxWidth: 860, margin: "0 auto" }}>
+        <div ref={deliverablesRef} style={deliverablesStyle}>
+          <SectionLabel>6-month content partnership</SectionLabel>
+          {concept.retainer_summary && (
+            <p style={{ fontSize: 15, color: "#888", lineHeight: 1.85, maxWidth: 640, marginTop: 16, marginBottom: 40, fontWeight: 300 }}>
+              {concept.retainer_summary}
+            </p>
+          )}
+          {concept.retainer_phases ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 8 }}>
+              {concept.retainer_phases.map((phase, i) => (
+                <RetainerPhase key={i} phase={phase} index={i} />
+              ))}
+            </div>
+          ) : (
+            concept.timeline && (
+              <div style={{ background: C.card, border: "1px solid " + C.border, padding: "22px 28px" }}>
+                <p style={{ fontSize: 13, color: C.white, lineHeight: 1.7, fontWeight: 300 }}>{concept.timeline}</p>
+              </div>
+            )
+          )}
         </div>
       </div>
 
