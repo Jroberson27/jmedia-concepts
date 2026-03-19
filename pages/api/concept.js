@@ -36,74 +36,6 @@ async function fetchContact(contactId) {
   return data.properties;
 }
 
-// Fetch images from the hotel's own website using OG/meta tags and img scraping
-async function fetchPropertyImages(websiteUrl) {
-  if (!websiteUrl) return [];
-
-  try {
-    // Ensure URL has protocol
-    let url = websiteUrl;
-    if (!url.startsWith("http")) url = "https://" + url;
-
-    const res = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; JMEDIA-Bot/1.0)",
-        "Accept": "text/html",
-      },
-      signal: AbortSignal.timeout(8000),
-    });
-
-    if (!res.ok) return [];
-    const html = await res.text();
-
-    const images = new Set();
-
-    // Extract OG images (highest priority — these are the property's hero shots)
-    const ogMatches = html.matchAll(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/gi);
-    for (const m of ogMatches) {
-      if (m[1] && m[1].startsWith("http")) images.add(m[1]);
-    }
-
-    // Also check content-first OG format
-    const ogMatches2 = html.matchAll(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/gi);
-    for (const m of ogMatches2) {
-      if (m[1] && m[1].startsWith("http")) images.add(m[1]);
-    }
-
-    // Twitter card images as fallback
-    const twitterMatches = html.matchAll(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/gi);
-    for (const m of twitterMatches) {
-      if (m[1] && m[1].startsWith("http")) images.add(m[1]);
-    }
-
-    // Large img tags as additional fallback (filter for likely hero images)
-    const imgMatches = html.matchAll(/<img[^>]+src=["']([^"']+)["'][^>]*>/gi);
-    for (const m of imgMatches) {
-      const src = m[1];
-      if (!src || !src.startsWith("http")) continue;
-      // Only include images that look like hero/lifestyle shots
-      const lower = src.toLowerCase();
-      if (
-        lower.includes("hero") ||
-        lower.includes("banner") ||
-        lower.includes("home") ||
-        lower.includes("gallery") ||
-        lower.includes("room") ||
-        lower.includes("pool") ||
-        lower.includes("exterior") ||
-        lower.includes("lobby")
-      ) {
-        images.add(src);
-      }
-    }
-
-    // Return up to 4 unique images
-    return Array.from(images).slice(0, 4);
-  } catch {
-    return [];
-  }
-}
-
 async function generateConceptLive(contact, scoring) {
   const prompt = `You are writing a personalized one-page content concept for JMEDIA Productions, a hospitality content company targeting a 6-month content partnership. The concept is for ${contact.company} in ${contact.city || ""}, ${contact.state || ""}.
 
@@ -187,43 +119,33 @@ export default async function handler(req, res) {
 
   try {
     const contact = await fetchContact(id);
-
     if (contact.jmedia_track !== "track_a") {
       return res.status(403).json({ error: "Not a hospitality contact" });
     }
 
     const scoring = parseMessage(contact.message);
 
-    // Fetch property images and concept in parallel for speed
-    const [propertyImages, conceptResult] = await Promise.all([
-      fetchPropertyImages(contact.website),
-      (async () => {
-        if (contact.jmedia_concept) {
-          try {
-            const parsed = JSON.parse(contact.jmedia_concept);
-            // If stored concept missing retainer_phases, regenerate live
-            if (!parsed.retainer_phases) {
-              if (!ANTHROPIC_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
-              return await generateConceptLive(contact, scoring);
-            }
-            return parsed;
-          } catch {
-            if (!ANTHROPIC_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
-            return await generateConceptLive(contact, scoring);
-          }
+    // Use pre-generated concept if available — fallback to live generation
+    let concept;
+    if (contact.jmedia_concept) {
+      try {
+        const parsed = JSON.parse(contact.jmedia_concept);
+        if (!parsed.retainer_phases) {
+          if (!ANTHROPIC_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
+          concept = await generateConceptLive(contact, scoring);
         } else {
-          if (!ANTHROPIC_KEY) throw new Error("ANTHROPIC_API_KEY not configured and no cached concept found");
-          return await generateConceptLive(contact, scoring);
+          concept = parsed;
         }
-      })(),
-    ]);
+      } catch {
+        concept = await generateConceptLive(contact, scoring);
+      }
+    } else {
+      if (!ANTHROPIC_KEY) throw new Error("ANTHROPIC_API_KEY not configured and no cached concept found");
+      concept = await generateConceptLive(contact, scoring);
+    }
 
-    return res.status(200).json({
-      contact,
-      scoring,
-      concept: conceptResult,
-      propertyImages,
-    });
+    // No image fetching here — images load separately client-side for instant page render
+    return res.status(200).json({ contact, scoring, concept });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
