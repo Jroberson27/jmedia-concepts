@@ -296,7 +296,7 @@ function ConceptView({ data, gated, onUngate, C, isDark }) {
   const breakImg = propertyImages[1] || propertyImages[0] || null;
   const galleryImgs = propertyImages.slice(0, 4);
   const logoSrc = isDark ? "/jmedia-logo.png" : "/jmedia-logo-light.png";
-  const logoStyle = isDark ? { height: 52, mixBlendMode: "screen" } : { height: 52 };
+  const logoStyle = isDark ? { height: 52, mixBlendMode: "screen" } : { height: 52, mixBlendMode: "multiply" };
 
   const [heroRef, heroStyle] = useFadeUp(0);
   const [statsRef, statsStyle] = useFadeUp(0);
@@ -467,7 +467,7 @@ function ConceptView({ data, gated, onUngate, C, isDark }) {
 
       {/* FOOTER */}
       <footer style={{ borderTop: `1px solid ${C.border}`, padding: "32px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", background: C.black }}>
-        <img src={logoSrc} alt="JMEDIA Productions" style={isDark ? { height: 32, opacity: 0.55, mixBlendMode: "screen" } : { height: 32, opacity: 0.7 }} />
+        <img src={logoSrc} alt="JMEDIA Productions" style={isDark ? { height: 32, opacity: 0.55, mixBlendMode: "screen" } : { height: 32, opacity: 0.8, mixBlendMode: "multiply" }} />
         <span style={{ fontFamily: FONT, fontSize: 10, color: C.muted, letterSpacing: "0.06em" }}>Confidential / {contact.company} / {new Date().getFullYear()}</span>
       </footer>
     </div>
