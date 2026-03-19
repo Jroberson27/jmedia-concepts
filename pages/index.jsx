@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 
 const CALENDAR_URL = "https://meetings.hubspot.com/officialjordan-roberson2/jmedia-intro";
 
@@ -98,7 +99,7 @@ function useColorScheme() {
   return { isDark, mounted };
 }
 
-export default function ConceptPage() {
+function ConceptPage() {
   const [state, setState] = useState("loading");
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -740,3 +741,5 @@ function ConceptView({ data, gated, onUngate, isDark = true }) {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(ConceptPage), { ssr: false });
