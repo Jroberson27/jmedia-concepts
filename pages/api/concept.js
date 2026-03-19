@@ -125,18 +125,18 @@ export default async function handler(req, res) {
 
     const scoring = parseMessage(contact.message);
 
+    // Use pre-generated concept if available — fallback to live generation
     let concept;
     if (contact.jmedia_concept) {
       try {
         const parsed = JSON.parse(contact.jmedia_concept);
-        if (parsed.retainer_phases) {
-          concept = parsed;
-        } else {
-          if (!ANTHROPIC_KEY) throw new Error("No cached concept with retainer_phases found");
+        if (!parsed.retainer_phases) {
+          if (!ANTHROPIC_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
           concept = await generateConceptLive(contact, scoring);
+        } else {
+          concept = parsed;
         }
       } catch {
-        if (!ANTHROPIC_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
         concept = await generateConceptLive(contact, scoring);
       }
     } else {
@@ -144,9 +144,9 @@ export default async function handler(req, res) {
       concept = await generateConceptLive(contact, scoring);
     }
 
+    // No image fetching here — images load separately client-side for instant page render
     return res.status(200).json({ contact, scoring, concept });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
 }
-```
