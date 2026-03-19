@@ -85,15 +85,17 @@ function useFadeUp(delay) {
 }
 
 function useColorScheme() {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(true); // default dark for SSR
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
+    setMounted(true);
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     setIsDark(mq.matches);
     const handler = (e) => setIsDark(e.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, []);
-  return isDark;
+  return { isDark, mounted };
 }
 
 export default function ConceptPage() {
@@ -102,7 +104,7 @@ export default function ConceptPage() {
   const [error, setError] = useState(null);
   const [gated, setGated] = useState(true);
   const [isPrinting, setIsPrinting] = useState(false);
-  const isDark = useColorScheme();
+  const { isDark, mounted } = useColorScheme();
 
   useEffect(() => {
     const onBeforePrint = () => setIsPrinting(true);
@@ -144,19 +146,20 @@ export default function ConceptPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { background: ${isDark ? DARK_THEME.black : LIGHT_THEME.black}; color: ${isDark ? DARK_THEME.white : LIGHT_THEME.white}; font-family: ${FONT.body}; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; transition: background 0.3s ease, color 0.3s ease; }
+        html, body { background: #0A0A0A; color: #F4F2EE; font-family: ${FONT.body}; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; transition: background 0.3s ease, color 0.3s ease; }
         ::selection { background: #E8625A; color: #FFFFFF; }
         ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-track { background: ${isDark ? DARK_THEME.black : LIGHT_THEME.black}; }
-        ::-webkit-scrollbar-thumb { background: ${isDark ? DARK_THEME.dim : LIGHT_THEME.dim}; }
+        ::-webkit-scrollbar-track { background: #0A0A0A; }
+        ::-webkit-scrollbar-thumb { background: #2A2A2A; }
         @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
       `}</style>
-      {state === "loading" && <LoadingScreen />}
-      {state === "error" && <ErrorScreen message={error} />}
-      {state === "ready" && data && isPrinting && <PrintView data={data} />}
-      {state === "ready" && data && !isPrinting && <ConceptView data={data} gated={gated} onUngate={() => setGated(false)} isDark={isDark} />}
+      {!mounted && state === "loading" && <LoadingScreen />}
+      {mounted && state === "loading" && <LoadingScreen />}
+      {mounted && state === "error" && <ErrorScreen message={error} />}
+      {mounted && state === "ready" && data && isPrinting && <PrintView data={data} />}
+      {mounted && state === "ready" && data && !isPrinting && <ConceptView data={data} gated={gated} onUngate={() => setGated(false)} isDark={isDark} />}
     </>
   );
 }
