@@ -15,9 +15,9 @@ const C = {
 };
 
 const FONT = {
-  display: "'Raleway', system-ui, sans-serif",
-  body:    "'Nunito', system-ui, sans-serif",
-  mono:    "'Raleway', system-ui, sans-serif",
+  display: "'Inter', system-ui, sans-serif",
+  body:    "'Inter', system-ui, sans-serif",
+  mono:    "'Inter', system-ui, sans-serif",
 };
 
 const OTA_STATS = [
@@ -102,7 +102,7 @@ export default function ConceptPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600&family=Nunito:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { background: ${C.black}; color: ${C.white}; font-family: ${FONT.body}; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
         ::selection { background: ${C.coral}; color: ${C.white}; }
@@ -148,7 +148,7 @@ function StatCounter({ value, suffix, label }) {
       <div style={{ fontFamily: FONT.display, fontSize: "clamp(42px, 6vw, 66px)", fontWeight: 300, color: C.coral, lineHeight: 1, marginBottom: 12 }}>
         {dec ? count.toFixed(1) : Math.floor(count)}{suffix}
       </div>
-      <div style={{ fontFamily: FONT.mono, fontSize: 11, color: C.muted, letterSpacing: "0.08em", lineHeight: 1.7, maxWidth: 160, margin: "0 auto" }}>{label}</div>
+      <div style={{ fontFamily: FONT.body, fontSize: 13, color: C.muted, lineHeight: 1.7, maxWidth: 160, margin: "0 auto", fontWeight: 400 }}>{label}</div>
     </div>
   );
 }
@@ -157,7 +157,7 @@ function SectionLabel({ children }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
       <div style={{ width: 20, height: 1, background: C.coral }} />
-      <span style={{ fontFamily: FONT.mono, fontSize: 10, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase" }}>{children}</span>
+      <span style={{ fontFamily: FONT.body, fontSize: 11, color: C.muted, letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600 }}>{children}</span>
     </div>
   );
 }
@@ -168,7 +168,7 @@ function ImpactCard({ number, label, sub, accent }) {
       {accent && <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: C.coral }} />}
       <div style={{ fontFamily: FONT.display, fontSize: 44, fontWeight: 300, color: accent ? C.coral : C.white, lineHeight: 1, marginBottom: 8 }}>{number}</div>
       <div style={{ fontFamily: FONT.mono, fontSize: 10, color: accent ? C.coral : C.muted, letterSpacing: "0.08em", marginBottom: 12 }}>{label}</div>
-      <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, fontWeight: 300 }}>{sub}</p>
+      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.7, fontWeight: 400 }}>{sub}</p>
     </div>
   );
 }
@@ -180,13 +180,13 @@ function DirectionCard({ index, direction }) {
       <button onClick={() => setOpen(o => !o)} style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "22px 28px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, textAlign: "left" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
           <span style={{ fontFamily: FONT.mono, fontSize: 10, color: C.coral }}>{String(index).padStart(2, "0")}</span>
-          <span style={{ fontFamily: FONT.display, fontSize: 22, fontWeight: 400, color: C.white }}>{direction.name}</span>
+          <span style={{ fontFamily: FONT.display, fontSize: 20, fontWeight: 600, color: C.white }}>{direction.name}</span>
         </div>
         <span style={{ fontSize: 18, color: C.muted, transform: open ? "rotate(45deg)" : "rotate(0)", transition: "transform 0.25s ease", flexShrink: 0, lineHeight: 1 }}>+</span>
       </button>
       <div style={{ maxHeight: open ? "300px" : "0", overflow: "hidden", transition: "max-height 0.35s ease" }}>
         <div style={{ padding: "0 28px 28px", borderTop: "1px solid " + C.border }}>
-          <p style={{ fontSize: 13, color: "#777", lineHeight: 1.8, marginBottom: 18, marginTop: 20, fontWeight: 300 }}>{direction.angle}</p>
+          <p style={{ fontSize: 14, color: "#999", lineHeight: 1.8, marginBottom: 18, marginTop: 20, fontWeight: 400 }}>{direction.angle}</p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {direction.formats.map((f, i) => (
               <span key={i} style={{ fontFamily: FONT.mono, fontSize: 9, color: C.coral, background: C.coral + "11", border: "1px solid " + C.coralDim, padding: "5px 12px", letterSpacing: "0.08em" }}>{f}</span>
@@ -216,7 +216,7 @@ function RetainerPhase({ phase, index }) {
           </div>
           <div style={{ width: 1, height: 32, background: C.border, flexShrink: 0 }} />
           <div>
-            <div style={{ fontSize: 17, fontWeight: 500, color: C.white, marginBottom: 3 }}>{phase.storyline}</div>
+            <div style={{ fontSize: 18, fontWeight: 600, color: C.white, marginBottom: 4 }}>{phase.storyline}</div>
             <div style={{ fontSize: 12, color: C.muted, fontWeight: 300 }}>{phase.goal}</div>
           </div>
         </div>
@@ -228,11 +228,11 @@ function RetainerPhase({ phase, index }) {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, marginTop: 20 }}>
             <div style={{ background: C.black, border: "1px solid " + C.border, padding: "18px 20px" }}>
               <div style={{ fontFamily: FONT.mono, fontSize: 9, color: color, letterSpacing: "0.1em", marginBottom: 10 }}>Strategic focus</div>
-              <p style={{ fontSize: 13, color: "#888", lineHeight: 1.75, fontWeight: 300 }}>{phase.focus}</p>
+              <p style={{ fontSize: 14, color: "#999", lineHeight: 1.75, fontWeight: 400 }}>{phase.focus}</p>
             </div>
             <div style={{ background: C.black, border: "1px solid " + C.border, padding: "18px 20px" }}>
               <div style={{ fontFamily: FONT.mono, fontSize: 9, color: C.muted, letterSpacing: "0.1em", marginBottom: 10 }}>Deliverables</div>
-              <p style={{ fontSize: 13, color: "#888", lineHeight: 1.75, fontWeight: 300 }}>{phase.output}</p>
+              <p style={{ fontSize: 14, color: "#999", lineHeight: 1.75, fontWeight: 400 }}>{phase.output}</p>
             </div>
           </div>
           {index < 2 && (
@@ -333,7 +333,7 @@ function ConceptView({ data, gated, onUngate }) {
           <h1 style={{ fontFamily: FONT.display, fontSize: "clamp(44px, 7vw, 82px)", fontWeight: 300, lineHeight: 1.05, color: C.white, marginBottom: 28, letterSpacing: "-0.01em" }}>
             {concept.headline}
           </h1>
-          <p style={{ fontSize: 17, color: "#888", lineHeight: 1.85, maxWidth: 580, fontWeight: 300 }}>
+          <p style={{ fontSize: 18, color: "#999", lineHeight: 1.85, maxWidth: 580, fontWeight: 400 }}>
             {concept.opening}
           </p>
           <div style={{ position: "absolute", bottom: 36, left: 48, display: "flex", alignItems: "center", gap: 12 }}>
@@ -346,7 +346,7 @@ function ConceptView({ data, gated, onUngate }) {
       {/* OTA STATS */}
       <div style={{ background: C.dark, borderTop: "1px solid " + C.border, borderBottom: "1px solid " + C.border, padding: "80px 48px" }}>
         <div ref={statsRef} style={{ ...statsStyle, maxWidth: 860, margin: "0 auto" }}>
-          <div style={{ fontFamily: FONT.mono, fontSize: 10, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", textAlign: "center", marginBottom: 60 }}>
+          <div style={{ fontFamily: FONT.body, fontSize: 11, color: C.muted, letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600, textAlign: "center", marginBottom: 60 }}>
             Why direct bookings matter
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "40px 24px" }}>
@@ -356,7 +356,7 @@ function ConceptView({ data, gated, onUngate }) {
             <div style={{ fontFamily: FONT.mono, fontSize: 10, color: C.coral, letterSpacing: "0.1em", marginBottom: 8 }}>
               {contact.company} — {otaLevel} OTA dependency
             </div>
-            <p style={{ fontSize: 13, color: "#888", lineHeight: 1.8, fontWeight: 300 }}>{concept.ota_impact}</p>
+            <p style={{ fontSize: 14, color: "#999", lineHeight: 1.8, fontWeight: 400 }}>{concept.ota_impact}</p>
           </div>
         </div>
       </div>
@@ -369,11 +369,11 @@ function ConceptView({ data, gated, onUngate }) {
             <div style={{ background: C.card, border: "1px solid " + C.border, padding: "36px 32px", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, " + C.coral + ", transparent)" }} />
               <div style={{ fontFamily: FONT.mono, fontSize: 10, color: C.coral, letterSpacing: "0.1em", marginBottom: 16 }}>Brand identity</div>
-              <p style={{ fontSize: 14, color: C.white, lineHeight: 1.9, fontWeight: 300 }}>{contact.jmedia_brand_identity}</p>
+              <p style={{ fontSize: 15, color: C.white, lineHeight: 1.9, fontWeight: 400 }}>{contact.jmedia_brand_identity}</p>
             </div>
             <div style={{ background: C.card, border: "1px solid " + C.border, padding: "36px 32px" }}>
               <div style={{ fontFamily: FONT.mono, fontSize: 10, color: C.muted, letterSpacing: "0.1em", marginBottom: 16 }}>Market position</div>
-              <p style={{ fontSize: 14, color: C.white, lineHeight: 1.9, fontWeight: 300 }}>{contact.jmedia_key_detail}</p>
+              <p style={{ fontSize: 15, color: C.white, lineHeight: 1.9, fontWeight: 400 }}>{contact.jmedia_key_detail}</p>
             </div>
           </div>
         </div>
@@ -435,7 +435,7 @@ function ConceptView({ data, gated, onUngate }) {
             {concept.deliverables.map((d, i) => (
               <div key={i} style={{ background: C.card, border: "1px solid " + C.border, padding: "20px 24px", display: "flex", gap: 16, alignItems: "flex-start" }}>
                 <span style={{ fontFamily: FONT.mono, fontSize: 10, color: C.coral, marginTop: 3, flexShrink: 0 }}>{String(i + 1).padStart(2, "0")}</span>
-                <span style={{ fontSize: 13, color: C.white, lineHeight: 1.7, fontWeight: 300 }}>{d}</span>
+                <span style={{ fontSize: 14, color: C.white, lineHeight: 1.7, fontWeight: 400 }}>{d}</span>
               </div>
             ))}
           </div>
@@ -447,7 +447,7 @@ function ConceptView({ data, gated, onUngate }) {
         <div ref={deliverablesRef} style={deliverablesStyle}>
           <SectionLabel>6-month content partnership</SectionLabel>
           {concept.retainer_summary && (
-            <p style={{ fontSize: 15, color: "#888", lineHeight: 1.85, maxWidth: 640, marginTop: 16, marginBottom: 40, fontWeight: 300 }}>
+            <p style={{ fontSize: 16, color: "#999", lineHeight: 1.85, maxWidth: 640, marginTop: 16, marginBottom: 40, fontWeight: 400 }}>
               {concept.retainer_summary}
             </p>
           )}
@@ -460,7 +460,7 @@ function ConceptView({ data, gated, onUngate }) {
           ) : (
             concept.timeline && (
               <div style={{ background: C.card, border: "1px solid " + C.border, padding: "22px 28px" }}>
-                <p style={{ fontSize: 13, color: C.white, lineHeight: 1.7, fontWeight: 300 }}>{concept.timeline}</p>
+                <p style={{ fontSize: 14, color: C.white, lineHeight: 1.7, fontWeight: 400 }}>{concept.timeline}</p>
               </div>
             )
           )}
@@ -485,7 +485,7 @@ function ConceptView({ data, gated, onUngate }) {
               <div style={{ fontFamily: FONT.mono, fontSize: 9, color: C.muted, marginTop: 6 }}>views per episode</div>
             </div>
             <div style={{ width: 1, height: 70, background: C.border, flexShrink: 0 }} />
-            <p style={{ fontSize: 13, color: "#777", lineHeight: 1.85, fontWeight: 300 }}>
+            <p style={{ fontSize: 14, color: "#999", lineHeight: 1.85, fontWeight: 400 }}>
               I worked on the Checked In series for Universal Orlando, covering Stella Nova, Terra Luna, and Helios Grand. Each episode averaged 1.5 million views at 69% watch completion. The same approach — content that captures what a property actually feels like — is what I bring to {contact.company}.
             </p>
           </div>
