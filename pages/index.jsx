@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const CALENDAR_URL = "https://calendar.app.google/r4YhAH1SQJJXLgCu9";
+const CALENDAR_URL = "https://meetings.hubspot.com/officialjordan-roberson2/jmedia-intro";
 
 const C = {
   black:    "#0A0A0A",
