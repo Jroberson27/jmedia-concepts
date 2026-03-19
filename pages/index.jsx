@@ -80,7 +80,22 @@ export default function ConceptPage() {
     if (!id) { setError("No contact ID in URL."); setState("error"); return; }
     fetch("/api/concept?id=" + id)
       .then(r => r.json())
-      .then(d => { if (d.error) throw new Error(d.error); setData(d); setState("ready"); })
+      .then(d => {
+        if (d.error) throw new Error(d.error);
+        setData(d);
+        setState("ready");
+        // Fetch images separately after page renders — keeps initial load instant
+        if (d.contact?.website) {
+          fetch("/api/images?website=" + encodeURIComponent(d.contact.website))
+            .then(r => r.json())
+            .then(img => {
+              if (img.images?.length) {
+                setData(prev => ({ ...prev, propertyImages: img.images }));
+              }
+            })
+            .catch(() => {});
+        }
+      })
       .catch(e => { setError(e.message); setState("error"); });
   }, []);
 
