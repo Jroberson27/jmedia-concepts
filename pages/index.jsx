@@ -74,6 +74,18 @@ export default function ConceptPage() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [gated, setGated] = useState(true);
+  const [isPrinting, setIsPrinting] = useState(false);
+
+  useEffect(() => {
+    const onBeforePrint = () => setIsPrinting(true);
+    const onAfterPrint = () => setIsPrinting(false);
+    window.addEventListener("beforeprint", onBeforePrint);
+    window.addEventListener("afterprint", onAfterPrint);
+    return () => {
+      window.removeEventListener("beforeprint", onBeforePrint);
+      window.removeEventListener("afterprint", onAfterPrint);
+    };
+  }, []);
 
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("id");
@@ -111,10 +123,12 @@ export default function ConceptPage() {
         ::-webkit-scrollbar-thumb { background: ${C.dim}; }
         @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
       `}</style>
       {state === "loading" && <LoadingScreen />}
       {state === "error" && <ErrorScreen message={error} />}
-      {state === "ready" && data && <ConceptView data={data} gated={gated} onUngate={() => setGated(false)} />}
+      {state === "ready" && data && isPrinting && <PrintView data={data} />}
+      {state === "ready" && data && !isPrinting && <ConceptView data={data} gated={gated} onUngate={() => setGated(false)} />}
     </>
   );
 }
@@ -289,6 +303,173 @@ function GateSection({ gated, onUngate, hotel }) {
           View concept without downloading
         </button>
       </div>
+    </div>
+  );
+}
+
+function PrintView({ data }) {
+  const { contact, concept } = data;
+  const P = { fontFamily: "'Inter', system-ui, sans-serif" };
+  const coral = "#E8625A";
+  const black = "#111111";
+  const muted = "#666666";
+  const border = "#e0e0e0";
+  const bg = "#f7f7f7";
+
+  return (
+    <div style={{ ...P, background: "#fff", color: black, maxWidth: 780, margin: "0 auto", padding: "32px 40px", fontSize: 11 }}>
+
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", paddingBottom: 16, borderBottom: "2px solid " + coral, marginBottom: 20 }}>
+        <div>
+          <div style={{ fontSize: 8, color: coral, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 6 }}>
+            Prepared exclusively for {contact.company}
+          </div>
+          <h1 style={{ fontSize: 22, fontWeight: 700, color: black, lineHeight: 1.2, margin: 0, maxWidth: 480 }}>
+            {concept.headline}
+          </h1>
+          <p style={{ fontSize: 12, color: muted, marginTop: 8, lineHeight: 1.6, maxWidth: 480 }}>
+            {concept.opening}
+          </p>
+        </div>
+        <div style={{ textAlign: "right", flexShrink: 0, paddingLeft: 24 }}>
+          <div style={{ fontSize: 8, color: muted, marginBottom: 4 }}>JMEDIA Productions</div>
+          <div style={{ fontSize: 8, color: muted }}>jmediapro.com</div>
+        </div>
+      </div>
+
+      {/* Brand identity + Key detail */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 16 }}>
+        <div style={{ background: bg, border: "1px solid " + border, padding: "12px 14px", borderLeft: "3px solid " + coral }}>
+          <div style={{ fontSize: 8, color: coral, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 600 }}>Brand Identity</div>
+          <p style={{ fontSize: 11, color: black, lineHeight: 1.65, margin: 0 }}>{contact.jmedia_brand_identity}</p>
+        </div>
+        <div style={{ background: bg, border: "1px solid " + border, padding: "12px 14px" }}>
+          <div style={{ fontSize: 8, color: muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 600 }}>Market Position</div>
+          <p style={{ fontSize: 11, color: black, lineHeight: 1.65, margin: 0 }}>{contact.jmedia_key_detail}</p>
+        </div>
+      </div>
+
+      {/* OTA stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 16 }}>
+        {[
+          { num: "23%", label: "Average OTA commission per booking" },
+          { num: "68%", label: "Guests research on social before booking" },
+          { num: "3.2x", label: "Higher lifetime value from direct guests" },
+        ].map((s, i) => (
+          <div key={i} style={{ background: bg, border: "1px solid " + border, padding: "10px 12px", textAlign: "center" }}>
+            <div style={{ fontSize: 20, fontWeight: 300, color: coral, lineHeight: 1 }}>{s.num}</div>
+            <div style={{ fontSize: 9, color: muted, marginTop: 4, lineHeight: 1.5 }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* OTA impact callout */}
+      <div style={{ background: coral + "0D", border: "1px solid " + coral + "44", borderLeft: "3px solid " + coral, padding: "10px 14px", marginBottom: 16 }}>
+        <div style={{ fontSize: 8, color: coral, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4, fontWeight: 600 }}>Direct Booking Impact</div>
+        <p style={{ fontSize: 11, color: black, lineHeight: 1.6, margin: 0 }}>{concept.ota_impact}</p>
+      </div>
+
+      {/* Signature Storylines */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontSize: 8, color: muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10, fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 16, height: 1, background: coral }} />
+          Signature Storylines
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {concept.content_directions.map((dir, i) => (
+            <div key={i} style={{ background: bg, border: "1px solid " + border, padding: "10px 14px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                <span style={{ fontSize: 8, color: coral, fontWeight: 600 }}>{String(i + 1).padStart(2, "0")}</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: black }}>{dir.name}</span>
+              </div>
+              <p style={{ fontSize: 11, color: muted, lineHeight: 1.6, margin: "0 0 8px 0" }}>{dir.angle}</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                {dir.formats.map((f, j) => (
+                  <span key={j} style={{ fontSize: 8, color: coral, background: coral + "11", border: "1px solid " + coral + "33", padding: "2px 8px", letterSpacing: "0.06em" }}>{f}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Deliverables */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontSize: 8, color: muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10, fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 16, height: 1, background: coral }} />
+          Proposed Deliverables
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+          {concept.deliverables.map((d, i) => (
+            <div key={i} style={{ background: bg, border: "1px solid " + border, padding: "8px 12px", display: "flex", gap: 10, alignItems: "flex-start" }}>
+              <span style={{ fontSize: 8, color: coral, fontWeight: 600, flexShrink: 0, marginTop: 1 }}>{String(i + 1).padStart(2, "0")}</span>
+              <span style={{ fontSize: 11, color: black, lineHeight: 1.5 }}>{d}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 6-Month Retainer */}
+      {concept.retainer_phases && (
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 8, color: muted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 16, height: 1, background: coral }} />
+            6-Month Content Partnership
+          </div>
+          {concept.retainer_summary && (
+            <p style={{ fontSize: 11, color: muted, lineHeight: 1.65, marginBottom: 10 }}>{concept.retainer_summary}</p>
+          )}
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {concept.retainer_phases.map((phase, i) => (
+              <div key={i} style={{ background: bg, border: "1px solid " + border, padding: "10px 14px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+                  <div style={{ flexShrink: 0 }}>
+                    <div style={{ fontSize: 8, color: coral, fontWeight: 600 }}>{phase.phase}</div>
+                    <div style={{ fontSize: 8, color: muted }}>{phase.months}</div>
+                  </div>
+                  <div style={{ width: 1, height: 24, background: border, flexShrink: 0 }} />
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: black }}>{phase.storyline}</div>
+                    <div style={{ fontSize: 10, color: muted }}>{phase.goal}</div>
+                  </div>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                  <div style={{ background: "#fff", border: "1px solid " + border, padding: "8px 10px" }}>
+                    <div style={{ fontSize: 8, color: coral, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4, fontWeight: 600 }}>Strategic Focus</div>
+                    <p style={{ fontSize: 10, color: muted, lineHeight: 1.6, margin: 0 }}>{phase.focus}</p>
+                  </div>
+                  <div style={{ background: "#fff", border: "1px solid " + border, padding: "8px 10px" }}>
+                    <div style={{ fontSize: 8, color: muted, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4, fontWeight: 600 }}>Deliverables</div>
+                    <p style={{ fontSize: 10, color: muted, lineHeight: 1.6, margin: 0 }}>{phase.output}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Credibility */}
+      <div style={{ background: bg, border: "1px solid " + border, padding: "12px 14px", display: "flex", gap: 20, alignItems: "center", marginBottom: 16 }}>
+        <div style={{ flexShrink: 0, textAlign: "center" }}>
+          <div style={{ fontSize: 8, color: coral, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4, fontWeight: 600 }}>Proven at scale</div>
+          <div style={{ fontSize: 28, fontWeight: 300, color: black, lineHeight: 1 }}>1.5M</div>
+          <div style={{ fontSize: 8, color: muted, marginTop: 2 }}>views per episode</div>
+        </div>
+        <div style={{ width: 1, height: 48, background: border, flexShrink: 0 }} />
+        <p style={{ fontSize: 11, color: muted, lineHeight: 1.7, margin: 0 }}>
+          I worked on the Checked In series for Universal Orlando, covering Stella Nova, Terra Luna, and Helios Grand. Each episode averaged 1.5 million views at 69% watch completion. The same approach is what I bring to {contact.company}.
+        </p>
+      </div>
+
+      {/* Footer */}
+      <div style={{ borderTop: "1px solid " + border, paddingTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ fontSize: 9, color: coral, fontWeight: 600, letterSpacing: "0.1em" }}>JMEDIA Productions</div>
+        <div style={{ fontSize: 9, color: muted }}>Confidential / {contact.company} / {new Date().getFullYear()}</div>
+        <div style={{ fontSize: 9, color: muted }}>meetings.hubspot.com/officialjordan-roberson2/jmedia-intro</div>
+      </div>
+
     </div>
   );
 }
