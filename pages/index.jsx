@@ -136,7 +136,7 @@ function ConceptPage() {
 function Loading({ C }) {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 32, background: C.black }}>
-      <img src="/jmedia-logo.png" alt="JMEDIA" style={{ height: 56, mixBlendMode: "screen", animation: "float 3s ease infinite" }} />
+      <img src="/jmedia-logo.png" alt="JMEDIA" style={{ height: 56, animation: "float 3s ease infinite" }} />
       <div style={{ display: "flex", gap: 8 }}>
         {[0,1,2].map(i => <div key={i} style={{ width: 5, height: 5, borderRadius: "50%", background: "#E8625A", animation: `pulse 1.2s ease ${i*0.2}s infinite` }} />)}
       </div>
@@ -148,7 +148,7 @@ function Loading({ C }) {
 function Err({ C, message }) {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20, padding: "0 24px", textAlign: "center", background: C.black }}>
-      <img src="/jmedia-logo.png" alt="JMEDIA" style={{ height: 44, mixBlendMode: "screen", opacity: 0.7 }} />
+      <img src="/jmedia-logo.png" alt="JMEDIA" style={{ height: 44, opacity: 0.7 }} />
       <p style={{ color: C.muted, fontSize: 14 }}>{message || "Something went wrong."}</p>
     </div>
   );
@@ -296,7 +296,7 @@ function ConceptView({ data, gated, onUngate, C, isDark }) {
   const breakImg = propertyImages[1] || propertyImages[0] || null;
   const galleryImgs = propertyImages.slice(0, 4);
   const logoSrc = isDark ? "/jmedia-logo.png" : "/jmedia-logo-light.png";
-  const logoStyle = isDark ? { height: 52, mixBlendMode: "screen" } : { height: 52, mixBlendMode: "multiply" };
+  const logoStyle = { height: 52 };
 
   const [heroRef, heroStyle] = useFadeUp(0);
   const [statsRef, statsStyle] = useFadeUp(0);
@@ -467,7 +467,7 @@ function ConceptView({ data, gated, onUngate, C, isDark }) {
 
       {/* FOOTER */}
       <footer style={{ borderTop: `1px solid ${C.border}`, padding: "32px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", background: C.black }}>
-        <img src={logoSrc} alt="JMEDIA Productions" style={isDark ? { height: 32, opacity: 0.55, mixBlendMode: "screen" } : { height: 32, opacity: 0.8, mixBlendMode: "multiply" }} />
+        <img src={logoSrc} alt="JMEDIA Productions" style={{ height: 32, opacity: 0.7 }} />
         <span style={{ fontFamily: FONT, fontSize: 10, color: C.muted, letterSpacing: "0.06em" }}>Confidential / {contact.company} / {new Date().getFullYear()}</span>
       </footer>
     </div>
