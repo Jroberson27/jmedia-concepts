@@ -69,12 +69,25 @@ function useFadeUp(delay) {
   }];
 }
 
+function useColorScheme() {
+  const [isDark, setIsDark] = useState(true);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    setIsDark(mq.matches);
+    const handler = (e) => setIsDark(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return isDark;
+}
+
 export default function ConceptPage() {
   const [state, setState] = useState("loading");
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [gated, setGated] = useState(true);
   const [isPrinting, setIsPrinting] = useState(false);
+  const isDark = useColorScheme();
 
   useEffect(() => {
     const onBeforePrint = () => setIsPrinting(true);
@@ -116,7 +129,26 @@ export default function ConceptPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { background: ${C.black}; color: ${C.white}; font-family: ${FONT.body}; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+        :root {
+          --bg: ${C.black};
+          --surface: ${C.dark};
+          --card: ${C.card};
+          --border: ${C.border};
+          --text: ${C.white};
+          --muted: ${C.muted};
+          --coral: ${C.coral};
+        }
+        @media (prefers-color-scheme: light) {
+          :root {
+            --bg: #F8F8F6;
+            --surface: #FFFFFF;
+            --card: #FFFFFF;
+            --border: #E0E0E0;
+            --text: #111111;
+            --muted: #666666;
+          }
+        }
+        html, body { background: var(--bg); color: var(--text); font-family: ${FONT.body}; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
         ::selection { background: ${C.coral}; color: ${C.white}; }
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: ${C.black}; }
@@ -128,7 +160,7 @@ export default function ConceptPage() {
       {state === "loading" && <LoadingScreen />}
       {state === "error" && <ErrorScreen message={error} />}
       {state === "ready" && data && isPrinting && <PrintView data={data} />}
-      {state === "ready" && data && !isPrinting && <ConceptView data={data} gated={gated} onUngate={() => setGated(false)} />}
+      {state === "ready" && data && !isPrinting && <ConceptView data={data} gated={gated} onUngate={() => setGated(false)} isDark={isDark} />}
     </>
   );
 }
@@ -465,7 +497,7 @@ function PrintView({ data }) {
 
       {/* Footer */}
       <div style={{ borderTop: "1px solid " + border, paddingTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div style={{ fontSize: 9, color: coral, fontWeight: 600, letterSpacing: "0.1em" }}>JMEDIA Productions</div>
+        <img src="/jmedia-logo-light.png" alt="JMEDIA Productions" style={{ height: 24 }} />
         <div style={{ fontSize: 9, color: muted }}>Confidential / {contact.company} / {new Date().getFullYear()}</div>
         <div style={{ fontSize: 9, color: muted }}>meetings.hubspot.com/officialjordan-roberson2/jmedia-intro</div>
       </div>
@@ -474,8 +506,10 @@ function PrintView({ data }) {
   );
 }
 
-function ConceptView({ data, gated, onUngate }) {
+function ConceptView({ data, gated, onUngate, isDark = true }) {
   const { contact, concept, scoring, propertyImages = [] } = data;
+  const logoSrc = isDark ? '/jmedia-logo.png' : '/jmedia-logo-light.png';
+  const logoStyle = isDark ? { height: 52, mixBlendMode: 'screen' } : { height: 52 };
   const heroImage = propertyImages[0] || null;
   const breakImage = propertyImages[1] || propertyImages[0] || null;
   const galleryImages = propertyImages.slice(0, 4);
@@ -499,7 +533,7 @@ function ConceptView({ data, gated, onUngate }) {
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: C.coral }} />
 
         <nav style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "28px 48px", borderBottom: "1px solid " + C.border + "22" }}>
-          <img src="/jmedia-logo.png" alt="JMEDIA Productions" style={{ height: 52, mixBlendMode: "screen" }} />
+          <img src={logoSrc} alt="JMEDIA Productions" style={logoStyle} />
           <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
             <span style={{ fontFamily: FONT.mono, fontSize: 10, color: C.muted, letterSpacing: "0.1em" }}>Content Concept</span>
             <div style={{ width: 1, height: 14, background: C.border }} />
@@ -682,7 +716,7 @@ function ConceptView({ data, gated, onUngate }) {
 
       {/* FOOTER */}
       <footer style={{ borderTop: "1px solid " + C.border, padding: "32px 48px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <img src="/jmedia-logo.png" alt="JMEDIA Productions" style={{ height: 32, opacity: 0.55, mixBlendMode: "screen" }} />
+        <img src={logoSrc} alt="JMEDIA Productions" style={{ height: 32, opacity: isDark ? 0.55 : 0.8 }} />
         <span style={{ fontFamily: FONT.mono, fontSize: 10, color: C.muted, letterSpacing: "0.06em" }}>
           Confidential / {contact.company} / {new Date().getFullYear()}
         </span>
