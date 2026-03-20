@@ -509,27 +509,38 @@ function ConceptPage() {
         }
       })
       .catch(e => { setError(e.message); setState("error"); });
-    // Block right-click
-    const onContextMenu = (e) => e.preventDefault();
-    document.addEventListener("contextmenu", onContextMenu);
+    // Admin bypass — add ?preview=true to URL to disable all protections
+    const isPreview = new URLSearchParams(window.location.search).get("preview") === "true";
 
-    // Block Cmd+P / Ctrl+P
-    const onKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "p") {
-        e.preventDefault();
-        e.stopPropagation();
-        alert("To download this concept, please book a meeting using the button below.");
-        return false;
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
+    if (!isPreview) {
+      // Block right-click
+      const onContextMenu = (e) => e.preventDefault();
+      document.addEventListener("contextmenu", onContextMenu);
+
+      // Block Cmd+P / Ctrl+P
+      const onKeyDown = (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === "p") {
+          e.preventDefault();
+          e.stopPropagation();
+          alert("To download this concept, please book a meeting using the button below.");
+          return false;
+        }
+      };
+      document.addEventListener("keydown", onKeyDown);
+
+      return () => {
+        mq.removeEventListener("change", handler);
+        window.removeEventListener("beforeprint", onBefore);
+        window.removeEventListener("afterprint", onAfter);
+        document.removeEventListener("contextmenu", onContextMenu);
+        document.removeEventListener("keydown", onKeyDown);
+      };
+    }
 
     return () => {
       mq.removeEventListener("change", handler);
       window.removeEventListener("beforeprint", onBefore);
       window.removeEventListener("afterprint", onAfter);
-      document.removeEventListener("contextmenu", onContextMenu);
-      document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
 
