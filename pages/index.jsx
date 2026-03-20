@@ -8,12 +8,6 @@ const DARK = {
   border: "#1E1E1E", coral: "#E8625A", coralDim: "#5A1E1A",
   white: "#F4F2EE", muted: "#666666", dim: "#2A2A2A",
 };
-const LIGHT = {
-  black: "#F8F8F6", dark: "#FFFFFF", card: "#FFFFFF",
-  border: "#E0E0E0", coral: "#E8625A", coralDim: "#FADAD8",
-  white: "#111111", muted: "#777777", dim: "#E8E8E8",
-};
-
 const FONT = "'Inter', system-ui, sans-serif";
 
 const OTA_STATS = [
@@ -67,15 +61,8 @@ function ConceptPage() {
   const [error, setError] = useState(null);
   const [gated, setGated] = useState(true);
   const [isPrinting, setIsPrinting] = useState(false);
-  const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
-    // Detect color scheme
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(mq.matches);
-    const schemeHandler = (e) => setIsDark(e.matches);
-    mq.addEventListener("change", schemeHandler);
-
     // Print detection
     const onBefore = () => setIsPrinting(true);
     const onAfter = () => setIsPrinting(false);
@@ -102,20 +89,19 @@ function ConceptPage() {
       .catch(e => { setError(e.message); setState("error"); });
 
     return () => {
-      mq.removeEventListener("change", schemeHandler);
       window.removeEventListener("beforeprint", onBefore);
       window.removeEventListener("afterprint", onAfter);
     };
   }, []);
 
-  const C = isDark ? DARK : LIGHT;
+  const C = DARK;
 
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { background: ${C.black}; color: ${C.white}; font-family: ${FONT}; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; transition: background 0.3s ease; }
+        html, body { background: #0A0A0A !important; color: #F4F2EE !important; font-family: ${FONT}; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
         ::selection { background: #E8625A; color: #fff; }
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: ${C.black}; }
@@ -290,15 +276,13 @@ function GateSection({ gated, onUngate, hotel, C }) {
   );
 }
 
-function ConceptView({ data, gated, onUngate, C, isDark }) {
+function ConceptView({ data, gated, onUngate, C }) {
   const { contact, concept, scoring = {}, propertyImages = [] } = data;
   const heroImg = propertyImages[0] || null;
   const breakImg = propertyImages[1] || propertyImages[0] || null;
   const galleryImgs = propertyImages.slice(0, 4);
-  const logoSrc = isDark ? "/jmedia-logo.png" : "/jmedia-logo-light.png";
-  const logoStyle = isDark
-    ? { height: 52, mixBlendMode: "screen" }
-    : { height: 52, mixBlendMode: "multiply" };
+  const logoSrc = "/jmedia-logo.png";
+  const logoStyle = { height: 52, mixBlendMode: "screen" };
 
   const [heroRef, heroStyle] = useFadeUp(0);
   const [statsRef, statsStyle] = useFadeUp(0);
@@ -469,7 +453,7 @@ function ConceptView({ data, gated, onUngate, C, isDark }) {
 
       {/* FOOTER */}
       <footer style={{ borderTop: `1px solid ${C.border}`, padding: "32px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", background: C.black }}>
-        <img src={logoSrc} alt="JMEDIA Productions" style={{ height: 32, opacity: 0.7 }} />
+        <img src={logoSrc} alt="JMEDIA Productions" style={{ height: 32, opacity: 0.7, mixBlendMode: "screen" }} />
         <span style={{ fontFamily: FONT, fontSize: 10, color: C.muted, letterSpacing: "0.06em" }}>Confidential / {contact.company} / {new Date().getFullYear()}</span>
       </footer>
     </div>
