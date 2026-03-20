@@ -46,13 +46,11 @@ function useFadeUp(delay) {
   return [ref, { opacity:vis?1:0, transform:vis?"translateY(0)":"translateY(28px)", transition:`opacity 0.75s ease ${delay||0}ms, transform 0.75s ease ${delay||0}ms` }];
 }
 
-// Logo always uses the dark (white text) version — wrapped in dark bg pill so it reads on any background
-function Logo({ height=52 }) {
-  return (
-    <div style={{ background:"#0A0A0A", padding:"6px 14px", display:"inline-flex", alignItems:"center" }}>
-      <img src="/jmedia-logo.png" alt="JMEDIA Productions" style={{ height, display:"block" }} />
-    </div>
-  );
+// Logo: screen blend on dark bg (white text shows), multiply blend on light bg (black text shows, white disappears)
+function Logo({ height=52, isDark=true }) {
+  return isDark
+    ? <img src="/jmedia-logo.png" alt="JMEDIA Productions" style={{ height, mixBlendMode:"screen" }} />
+    : <img src="/jmedia-logo-light.png" alt="JMEDIA Productions" style={{ height, mixBlendMode:"multiply" }} />;
 }
 
 function SectionLabel({ children, C }) {
@@ -188,7 +186,7 @@ function GateSection({ gated, onUngate, hotel, C }) {
   );
 }
 
-function ConceptView({ data, gated, onUngate, C }) {
+function ConceptView({ data, gated, onUngate, C, isDark=true }) {
   const { contact, concept, scoring={}, propertyImages=[] } = data;
   const heroImg = propertyImages[0]||null;
   const breakImg = propertyImages[1]||propertyImages[0]||null;
@@ -212,7 +210,7 @@ function ConceptView({ data, gated, onUngate, C }) {
         <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${C.black}00 0%, ${C.black}BB 55%, ${C.black} 100%)` }} />
         <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral }} />
         <nav style={{ position:"relative", display:"flex", justifyContent:"space-between", alignItems:"center", padding:"20px 48px" }}>
-          <Logo height={40} />
+          <Logo height={40} isDark={isDark} />
           <div style={{ display:"flex", gap:20, alignItems:"center" }}>
             <span style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.1em" }}>Content Concept</span>
             <div style={{ width:1, height:14, background:C.border }} />
@@ -361,7 +359,7 @@ function ConceptView({ data, gated, onUngate, C }) {
 
       {/* FOOTER */}
       <footer style={{ borderTop:`1px solid ${C.border}`, padding:"28px 48px", display:"flex", justifyContent:"space-between", alignItems:"center", background:C.black }}>
-        <Logo height={28} />
+        <Logo height={28} isDark={isDark} />
         <span style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.06em" }}>Confidential / {contact.company} / {new Date().getFullYear()}</span>
       </footer>
     </div>
@@ -535,7 +533,7 @@ function ConceptPage() {
       `}</style>
       {state === "loading" && (
         <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:32, background:C.black }}>
-          <Logo height={52} />
+          <Logo height={52} isDark={true} />
           <div style={{ display:"flex", gap:8 }}>
             {[0,1,2].map(i=><div key={i} style={{ width:5, height:5, borderRadius:"50%", background:"#E8625A", animation:`pulse 1.2s ease ${i*0.2}s infinite` }} />)}
           </div>
@@ -544,13 +542,13 @@ function ConceptPage() {
       )}
       {state === "error" && (
         <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:20, padding:"0 24px", textAlign:"center", background:C.black }}>
-          <Logo height={44} />
+          <Logo height={44} isDark={true} />
           <p style={{ color:C.muted, fontSize:14 }}>{error||"Something went wrong."}</p>
         </div>
       )}
       {state === "ready" && data && isPrinting && <PrintView data={data} />}
       {state === "ready" && data && !isPrinting && (
-        <ConceptView data={data} gated={gated} onUngate={() => setGated(false)} C={C} />
+        <ConceptView data={data} gated={gated} onUngate={() => setGated(false)} C={C} isDark={isDark} />
       )}
     </>
   );
