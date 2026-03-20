@@ -210,7 +210,7 @@ function ConceptView({ data, gated, onUngate, C, isDark=true }) {
         <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${C.black}00 0%, ${C.black}BB 55%, ${C.black} 100%)` }} />
         <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral }} />
         <nav style={{ position:"relative", display:"flex", justifyContent:"space-between", alignItems:"center", padding:"20px 48px" }}>
-          <Logo height={40} isDark={isDark} />
+          <Logo height={64} isDark={isDark} />
           <div style={{ display:"flex", gap:20, alignItems:"center" }}>
             <span style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.1em" }}>Content Concept</span>
             <div style={{ width:1, height:14, background:C.border }} />
