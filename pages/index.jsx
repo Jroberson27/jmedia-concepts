@@ -132,7 +132,7 @@ function RetainerPhase({ phase, index, C }) {
       </button>
       <div style={{ maxHeight:open?"400px":"0", overflow:"hidden", transition:"max-height 0.35s ease" }}>
         <div style={{ padding:"0 28px 28px", borderTop:`1px solid ${C.border}` }}>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2, marginTop:20 }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2, marginTop:20 }} className="retainer-grid">
             <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"18px 20px" }}>
               <div style={{ fontSize:9, color, letterSpacing:"0.1em", marginBottom:10, fontWeight:600 }}>Strategic focus</div>
               <p style={{ fontSize:13, color:C.muted, lineHeight:1.75 }}>{phase.focus}</p>
@@ -202,14 +202,14 @@ function ConceptView({ data, gated, onUngate, C, isDark=true }) {
   const [gateRef, gateStyle] = useFadeUp(0);
 
   return (
-    <div style={{ maxWidth:"100%", overflowX:"hidden", background:C.black }}>
+    <div style={{ maxWidth:"100%", overflowX:"hidden", background:C.black }} className="protected-content">
 
       {/* HERO */}
       <div style={{ position:"relative", minHeight:"100vh", display:"flex", flexDirection:"column" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:heroImg?`url(${heroImg})`:"url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1600&q=80')", backgroundSize:"cover", backgroundPosition:"center", filter:"brightness(0.15) saturate(0.3)" }} />
         <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${C.black}00 0%, ${C.black}BB 55%, ${C.black} 100%)` }} />
         <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral }} />
-        <nav style={{ position:"relative", display:"flex", justifyContent:"space-between", alignItems:"center", padding:"20px 48px" }}>
+        <nav style={{ position:"relative", display:"flex", justifyContent:"space-between", alignItems:"center", padding:"20px 48px" }} className="nav-pad">
           <Logo height={64} isDark={isDark} />
           <div style={{ display:"flex", gap:20, alignItems:"center" }}>
             <span style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.1em" }}>Content Concept</span>
@@ -217,7 +217,7 @@ function ConceptView({ data, gated, onUngate, C, isDark=true }) {
             <span style={{ fontFamily:FONT, fontSize:10, color:C.coral, letterSpacing:"0.1em" }}>{contact.company}</span>
           </div>
         </nav>
-        <div ref={heroRef} style={{ ...heroStyle, position:"relative", flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"80px 48px 100px", maxWidth:940 }}>
+        <div ref={heroRef} style={{ ...heroStyle, position:"relative", flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"80px 48px 100px", maxWidth:940, className:"hero-pad" }}>
           <div style={{ fontFamily:FONT, fontSize:10, color:C.coral, letterSpacing:"0.14em", textTransform:"uppercase", marginBottom:24, fontWeight:600 }}>Prepared exclusively for {contact.company}</div>
           <h1 style={{ fontFamily:FONT, fontSize:"clamp(40px,7vw,78px)", fontWeight:700, lineHeight:1.08, color:C.white, marginBottom:28, letterSpacing:"-0.02em" }}>{concept.headline}</h1>
           <p style={{ fontSize:18, color:C.muted, lineHeight:1.85, maxWidth:580 }}>{concept.opening}</p>
@@ -232,7 +232,7 @@ function ConceptView({ data, gated, onUngate, C, isDark=true }) {
       <div style={{ background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}`, padding:"80px 48px" }}>
         <div ref={statsRef} style={{ ...statsStyle, maxWidth:860, margin:"0 auto" }}>
           <div style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.12em", textTransform:"uppercase", textAlign:"center", marginBottom:60, fontWeight:600 }}>Why direct bookings matter</div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"40px 24px" }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"40px 24px" }} className="grid-3">
             {OTA_STATS.map((s,i)=><StatCounter key={i} {...s} C={C} />)}
           </div>
           <div style={{ marginTop:56, padding:"24px 32px", background:C.coral+"0D", border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, maxWidth:680, margin:"56px auto 0" }}>
@@ -243,10 +243,10 @@ function ConceptView({ data, gated, onUngate, C, isDark=true }) {
       </div>
 
       {/* BRAND */}
-      <div style={{ padding:"100px 48px", maxWidth:860, margin:"0 auto" }}>
+      <div style={{ padding:"100px 48px", maxWidth:860, margin:"0 auto" }} className="section-pad">
         <div ref={brandRef} style={brandStyle}>
           <SectionLabel C={C}>What we see in {contact.company}</SectionLabel>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2, marginTop:28 }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2, marginTop:28 }} className="grid-2">
             <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"36px 32px", position:"relative", overflow:"hidden" }}>
               <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:`linear-gradient(90deg, ${C.coral}, transparent)` }} />
               <div style={{ fontFamily:FONT, fontSize:10, color:C.coral, letterSpacing:"0.1em", marginBottom:16, fontWeight:600 }}>Brand identity</div>
@@ -286,7 +286,7 @@ function ConceptView({ data, gated, onUngate, C, isDark=true }) {
       </div>
 
       {/* SIGNATURE STORYLINES */}
-      <div style={{ padding:"100px 48px", maxWidth:860, margin:"0 auto" }}>
+      <div style={{ padding:"100px 48px", maxWidth:860, margin:"0 auto" }} className="section-pad">
         <div ref={dirRef} style={dirStyle}>
           <SectionLabel C={C}>Signature Storylines</SectionLabel>
           <div style={{ display:"flex", flexDirection:"column", gap:2, marginTop:28 }}>
@@ -299,7 +299,7 @@ function ConceptView({ data, gated, onUngate, C, isDark=true }) {
       <div style={{ background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}`, padding:"100px 48px" }}>
         <div ref={delivRef} style={{ ...delivStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel C={C}>Proposed deliverables</SectionLabel>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2, marginTop:28 }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2, marginTop:28 }} className="grid-2">
             {concept.deliverables.map((d,i)=>(
               <div key={i} style={{ background:C.card, border:`1px solid ${C.border}`, padding:"20px 24px", display:"flex", gap:16, alignItems:"flex-start" }}>
                 <span style={{ fontSize:10, color:C.coral, marginTop:3, flexShrink:0, fontWeight:600 }}>{String(i+1).padStart(2,"0")}</span>
@@ -311,7 +311,7 @@ function ConceptView({ data, gated, onUngate, C, isDark=true }) {
       </div>
 
       {/* 6-MONTH RETAINER */}
-      <div style={{ padding:"100px 48px", maxWidth:860, margin:"0 auto" }}>
+      <div style={{ padding:"100px 48px", maxWidth:860, margin:"0 auto" }} className="section-pad">
         <div ref={retainerRef} style={retainerStyle}>
           <SectionLabel C={C}>6-month content partnership</SectionLabel>
           {concept.retainer_summary&&<p style={{ fontSize:16, color:C.muted, lineHeight:1.85, maxWidth:640, marginTop:16, marginBottom:40 }}>{concept.retainer_summary}</p>}
@@ -331,12 +331,12 @@ function ConceptView({ data, gated, onUngate, C, isDark=true }) {
       <div style={{ background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}`, padding:"100px 48px" }}>
         <div ref={impactRef} style={{ ...impactStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel C={C}>Direct booking impact</SectionLabel>
-          <div style={{ marginTop:28, display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:2 }}>
+          <div style={{ marginTop:28, display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:2 }} className="grid-3">
             <ImpactCard number="23%" label="Direct booking lift" sub="Average result for hospitality content campaigns in the first 90 days" C={C} />
             <ImpactCard number="4mo" label="Content lifespan" sub="One shoot repurposed across social, email, paid, and web for months" accent C={C} />
             <ImpactCard number="1 tier" label="OTA reduction" sub="Properties with strong brand content consistently lower OTA dependency within one season" C={C} />
           </div>
-          <div style={{ marginTop:2, background:C.card, border:`1px solid ${C.border}`, padding:"32px 36px", display:"flex", gap:32, alignItems:"center" }}>
+          <div style={{ marginTop:2, background:C.card, border:`1px solid ${C.border}`, padding:"32px 36px", display:"flex", gap:32, alignItems:"center", flexWrap:"wrap" }}>
             <div style={{ flexShrink:0, textAlign:"center" }}>
               <div style={{ fontSize:10, color:C.coral, letterSpacing:"0.1em", marginBottom:8, fontWeight:600 }}>Proven at scale</div>
               <div style={{ fontSize:48, fontWeight:300, color:C.white, lineHeight:1 }}>1.5M</div>
@@ -351,14 +351,14 @@ function ConceptView({ data, gated, onUngate, C, isDark=true }) {
       </div>
 
       {/* GATE */}
-      <div style={{ padding:"80px 48px 120px", maxWidth:860, margin:"0 auto" }}>
+      <div style={{ padding:"80px 48px 120px", maxWidth:860, margin:"0 auto" }} className="gate-pad">
         <div ref={gateRef} style={gateStyle}>
           <GateSection gated={gated} onUngate={onUngate} hotel={contact.company} C={C} />
         </div>
       </div>
 
       {/* FOOTER */}
-      <footer style={{ borderTop:`1px solid ${C.border}`, padding:"28px 48px", display:"flex", justifyContent:"space-between", alignItems:"center", background:C.black }}>
+      <footer style={{ borderTop:`1px solid ${C.border}`, padding:"28px 48px", display:"flex", justifyContent:"space-between", alignItems:"center", background:C.black }} className="footer-pad">
         <Logo height={28} isDark={isDark} />
         <span style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.06em" }}>Confidential / {contact.company} / {new Date().getFullYear()}</span>
       </footer>
@@ -509,10 +509,27 @@ function ConceptPage() {
         }
       })
       .catch(e => { setError(e.message); setState("error"); });
+    // Block right-click
+    const onContextMenu = (e) => e.preventDefault();
+    document.addEventListener("contextmenu", onContextMenu);
+
+    // Block Cmd+P / Ctrl+P
+    const onKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "p") {
+        e.preventDefault();
+        e.stopPropagation();
+        alert("To download this concept, please book a meeting using the button below.");
+        return false;
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+
     return () => {
       mq.removeEventListener("change", handler);
       window.removeEventListener("beforeprint", onBefore);
       window.removeEventListener("afterprint", onAfter);
+      document.removeEventListener("contextmenu", onContextMenu);
+      document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
 
@@ -530,6 +547,35 @@ function ConceptPage() {
         ::-webkit-scrollbar-thumb { background: ${C.dim}; }
         @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+          .grid-2 { grid-template-columns: 1fr !important; }
+          .grid-3 { grid-template-columns: 1fr !important; }
+          .section-pad { padding: 60px 20px !important; }
+          .hero-pad { padding: 60px 20px 80px !important; max-width: 100% !important; }
+          .nav-pad { padding: 16px 20px !important; }
+          .hero-h1 { font-size: clamp(32px, 8vw, 52px) !important; }
+          .gate-pad { padding: 40px 20px 80px !important; }
+          .footer-pad { padding: 24px 20px !important; }
+          .checked-in-block { flex-direction: column !important; }
+          .checked-in-divider { display: none !important; }
+          .retainer-grid { grid-template-columns: 1fr !important; }
+          .gallery-grid { grid-template-columns: 1fr 1fr !important; }
+        }
+
+        /* PRINT PROTECTION — hide everything when user tries to print directly */
+        @media print {
+          body > * { display: none !important; }
+          .print-view { display: block !important; }
+        }
+
+        /* SCREENSHOT PROTECTION */
+        .protected-content {
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          user-select: none;
+        }
       `}</style>
       {state === "loading" && (
         <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:32, background:C.black }}>
