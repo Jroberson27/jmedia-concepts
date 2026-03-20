@@ -136,7 +136,7 @@ function ConceptPage() {
 function Loading({ C }) {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 32, background: C.black }}>
-      <img src="/jmedia-logo.png" alt="JMEDIA" style={{ height: 56, animation: "float 3s ease infinite" }} />
+      <img src="/jmedia-logo-light.png" alt="JMEDIA" style={{ height: 56, filter: "brightness(0) invert(1)", animation: "float 3s ease infinite" }} />
       <div style={{ display: "flex", gap: 8 }}>
         {[0,1,2].map(i => <div key={i} style={{ width: 5, height: 5, borderRadius: "50%", background: "#E8625A", animation: `pulse 1.2s ease ${i*0.2}s infinite` }} />)}
       </div>
@@ -295,8 +295,10 @@ function ConceptView({ data, gated, onUngate, C, isDark }) {
   const heroImg = propertyImages[0] || null;
   const breakImg = propertyImages[1] || propertyImages[0] || null;
   const galleryImgs = propertyImages.slice(0, 4);
-  const logoSrc = isDark ? "/jmedia-logo.png" : "/jmedia-logo-light.png";
-  const logoStyle = { height: 52 };
+  const logoSrc = "/jmedia-logo-light.png";
+  const logoStyle = isDark
+    ? { height: 52, filter: "brightness(0) invert(1)" }
+    : { height: 52 };
 
   const [heroRef, heroStyle] = useFadeUp(0);
   const [statsRef, statsStyle] = useFadeUp(0);
