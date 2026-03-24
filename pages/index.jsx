@@ -951,94 +951,79 @@ window.addEventListener('scroll', function(){ document.getElementById('nav').cla
 
 /* ── Hero scroll exit parallax ── */
 (function(){
-  var hero    = document.getElementById('hero');
-  var hcon    = hero ? hero.querySelector('.hcon') : null;
-  var hbg     = hero ? hero.querySelector('.hbg') : null;
-  var hgrain  = hero ? hero.querySelector('.hgrain') : null;
-  var hsub    = document.getElementById('hSb');
-  var hbtns   = document.getElementById('hBt');
-  var shint   = hero ? hero.querySelector('.shint') : null;
-  var hbars   = hero ? hero.querySelectorAll('.hbar') : [];
-  var chars   = [];  /* populated after hero entrance builds DOM */
+  var hero  = document.getElementById('hero');
+  var hcon  = hero ? hero.querySelector('.hcon')   : null;
+  var hbg   = hero ? hero.querySelector('.hbg')    : null;
+  var hgrain= hero ? hero.querySelector('.hgrain') : null;
+  var hh1   = document.getElementById('hH1');
+  var hsub  = document.getElementById('hSb');
+  var hbtns = document.getElementById('hBt');
+  var hLogo = document.getElementById('hLogo');
+  var shint = hero ? hero.querySelector('.shint')  : null;
 
   if(!hero || !hcon) return;
 
-  /* Wait for hero chars to be injected by entrance IIFE */
-  setTimeout(function(){
-    chars = Array.from(document.querySelectorAll('.hero-char, .ci-char'));
-  }, 400);
-
   function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
-  function lerp(a,b,t){ return a+(b-a)*t; }
+
+  /* Remove transition from hcon so JS drives it cleanly */
+  hcon.style.transition = 'none';
 
   var ticking = false;
 
   function update(){
     ticking = false;
-    var heroH = hero.offsetHeight;
     var scrollY = window.scrollY;
-    /* Progress: 0 at top, 1 when hero fully scrolled off */
+    var heroH   = hero.offsetHeight;
+    /* p = 0 at top of hero, 1 when fully scrolled past */
     var p = clamp(scrollY / heroH, 0, 1);
 
-    /* ── BG parallax: slower than page, slight scale ── */
+    /* ── Background: parallax lag (35%) + slow zoom ── */
     if(hbg){
-      var bgY   = scrollY * 0.35;                   /* moves up at 35% rate */
-      var bgS   = 1 + p * 0.12;                     /* scales to 1.12 */
-      hbg.style.transform = 'translateY(' + bgY + 'px) scale(' + bgS + ')';
+      var s = 1 + p * 0.1;
+      hbg.style.transform = 'translateY(' + (scrollY * 0.35) + 'px) scale(' + s + ')';
     }
+    /* Grain layer: even slower */
     if(hgrain){
-      hgrain.style.transform = 'translateY(' + (scrollY * 0.2) + 'px)';
+      hgrain.style.transform = 'translateY(' + (scrollY * 0.18) + 'px)';
     }
 
-    /* ── Content: rises and fades ── */
-    var conY   = scrollY * 0.18;                    /* gentle upward drift */
-    var conO   = clamp(1 - p * 2.8, 0, 1);         /* fades out fast */
-    hcon.style.transform = 'translateY(-' + conY + 'px)';
-    hcon.style.opacity   = conO;
+    /* ── Scroll hint: gone immediately ── */
+    if(shint) shint.style.opacity = clamp(1 - p * 10, 0, 1);
 
-    /* ── Subtext fades earlier ── */
+    /* ── Logo: drifts up slightly, fades ── */
+    if(hLogo){
+      hLogo.style.transform = 'translateY(-' + (scrollY * 0.08) + 'px)';
+      hLogo.style.opacity   = clamp(1 - p * 3, 0, 1);
+    }
+
+    /* ── Headline: rises faster than content, scales down slightly ── */
+    if(hh1){
+      var h1Y = scrollY * 0.25;
+      var h1S = 1 - p * 0.06;
+      hh1.style.transform = 'translateY(-' + h1Y + 'px) scale(' + h1S + ')';
+      hh1.style.opacity   = clamp(1 - p * 2.2, 0, 1);
+      hh1.style.filter    = p > 0.1 ? 'blur(' + (p * 4) + 'px)' : '';
+    }
+
+    /* ── Subtext: fades mid-scroll ── */
     if(hsub){
-      var subO = clamp(1 - p * 4, 0, 1);
-      hsub.style.opacity = subO;
+      hsub.style.transform = 'translateY(-' + (scrollY * 0.15) + 'px)';
+      hsub.style.opacity   = clamp(1 - p * 3.5, 0, 1);
     }
 
-    /* ── Buttons fade first ── */
+    /* ── Buttons: first to go ── */
     if(hbtns){
-      var btnO = clamp(1 - p * 5, 0, 1);
-      hbtns.style.opacity = btnO;
+      hbtns.style.transform = 'translateY(-' + (scrollY * 0.12) + 'px)';
+      hbtns.style.opacity   = clamp(1 - p * 5, 0, 1);
     }
-
-    /* ── Scroll hint fades immediately ── */
-    if(shint){
-      shint.style.opacity = clamp(1 - p * 8, 0, 1);
-    }
-
-    /* ── Hero chars: spread outward + blur as scroll increases ── */
-    if(chars.length && p > 0){
-      var spread = p * 24;                          /* max 24px per-char spread */
-      var charBlur = p * 6;                         /* max 6px blur */
-      chars.forEach(function(ch, i){
-        var dir = (i % 2 === 0) ? 1 : -1;          /* alternate left/right */
-        var offset = dir * spread * (0.4 + (i / chars.length) * 0.6);
-        ch.style.transform = 'translateX(' + offset + 'px) translateY(' + (-spread * 0.3) + 'px)';
-        ch.style.filter    = 'blur(' + charBlur + 'px)';
-      });
-    } else if(chars.length && p === 0){
-      chars.forEach(function(ch){
-        ch.style.transform = '';
-        ch.style.filter    = '';
-      });
-    }
-
-    /* ── Letterbox bars squeeze in ── */
-    hbars.forEach(function(bar){
-      bar.style.transform = 'scaleY(' + lerp(1, 1.6, p) + ')';
-    });
   }
 
   window.addEventListener('scroll', function(){
     if(!ticking){ requestAnimationFrame(update); ticking = true; }
   }, {passive:true});
+
+  /* Run once on load in case page was scrolled */
+  update();
 })();
 
 /* ── Scroll reveal ── */
