@@ -951,100 +951,164 @@ window.addEventListener('scroll', function(){ document.getElementById('nav').cla
 
 /* ── Hero scroll exit parallax ── */
 (function(){
-  var hero  = document.getElementById('hero');
-  var hcon  = hero ? hero.querySelector('.hcon')   : null;
-  var hbg   = hero ? hero.querySelector('.hbg')    : null;
-  var hgrain= hero ? hero.querySelector('.hgrain') : null;
-  var hh1   = document.getElementById('hH1');
-  var hsub  = document.getElementById('hSb');
-  var hbtns = document.getElementById('hBt');
-  var hLogo = document.getElementById('hLogo');
-  var shint = hero ? hero.querySelector('.shint')  : null;
+  var hero   = document.getElementById('hero');
+  var hbg    = hero ? hero.querySelector('.hbg')    : null;
+  var hgrain = hero ? hero.querySelector('.hgrain') : null;
+  var hh1    = document.getElementById('hH1');
+  var hsub   = document.getElementById('hSb');
+  var hbtns  = document.getElementById('hBt');
+  var hLogo  = document.getElementById('hLogo');
+  var shint  = hero ? hero.querySelector('.shint')  : null;
 
-  if(!hero || !hcon) return;
+  if(!hero) return;
+
+  /* Kill CSS transitions on scroll-controlled elements
+     so JS inline styles are not fought by CSS animations */
+  var killT = 'transition:none!important;';
+  setTimeout(function(){
+    /* Wait for entrance to finish before taking scroll control */
+    [hh1, hsub, hbtns, hLogo].forEach(function(el){
+      if(el) el.style.cssText += killT;
+    });
+  }, 1200);
 
   function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
 
-  /* Remove transition from hcon so JS drives it cleanly */
-  hcon.style.transition = 'none';
-
   var ticking = false;
+  var ready    = false;
+
+  /* Only run scroll animation after entrance settles */
+  setTimeout(function(){ ready = true; update(); }, 1200);
 
   function update(){
     ticking = false;
+    if(!ready) return;
+
     var scrollY = window.scrollY;
     var heroH   = hero.offsetHeight;
-    /* p = 0 at top of hero, 1 when fully scrolled past */
     var p = clamp(scrollY / heroH, 0, 1);
 
-    /* ── Background: parallax lag (35%) + slow zoom ── */
     if(hbg){
-      var s = 1 + p * 0.1;
-      hbg.style.transform = 'translateY(' + (scrollY * 0.35) + 'px) scale(' + s + ')';
+      hbg.style.transform = 'translateY(' + (scrollY * 0.38) + 'px) scale(' + (1 + p * 0.1) + ')';
     }
-    /* Grain layer: even slower */
     if(hgrain){
-      hgrain.style.transform = 'translateY(' + (scrollY * 0.18) + 'px)';
+      hgrain.style.transform = 'translateY(' + (scrollY * 0.2) + 'px)';
     }
-
-    /* ── Scroll hint: gone immediately ── */
-    if(shint) shint.style.opacity = clamp(1 - p * 10, 0, 1);
-
-    /* ── Logo: drifts up slightly, fades ── */
-    if(hLogo){
-      hLogo.style.transform = 'translateY(-' + (scrollY * 0.08) + 'px)';
-      hLogo.style.opacity   = clamp(1 - p * 3, 0, 1);
+    if(shint){
+      shint.style.opacity = clamp(1 - p * 12, 0, 1) + '';
     }
-
-    /* ── Headline: rises faster than content, scales down slightly ── */
-    if(hh1){
-      var h1Y = scrollY * 0.25;
-      var h1S = 1 - p * 0.06;
-      hh1.style.transform = 'translateY(-' + h1Y + 'px) scale(' + h1S + ')';
-      hh1.style.opacity   = clamp(1 - p * 2.2, 0, 1);
-      hh1.style.filter    = p > 0.1 ? 'blur(' + (p * 4) + 'px)' : '';
+    if(hLogo && ready){
+      hLogo.style.opacity   = clamp(1 - p * 3,   0, 1) + '';
+      hLogo.style.transform = 'translateY(-' + (scrollY * 0.1) + 'px)';
     }
-
-    /* ── Subtext: fades mid-scroll ── */
-    if(hsub){
-      hsub.style.transform = 'translateY(-' + (scrollY * 0.15) + 'px)';
-      hsub.style.opacity   = clamp(1 - p * 3.5, 0, 1);
+    if(hh1 && ready){
+      hh1.style.opacity   = clamp(1 - p * 2.4, 0, 1) + '';
+      hh1.style.transform = 'translateY(-' + (scrollY * 0.28) + 'px) scale(' + (1 - p * 0.05) + ')';
+      hh1.style.filter    = p > 0.08 ? 'blur(' + (p * 5).toFixed(1) + 'px)' : 'none';
     }
-
-    /* ── Buttons: first to go ── */
-    if(hbtns){
+    if(hsub && ready){
+      hsub.style.opacity   = clamp(1 - p * 3.8, 0, 1) + '';
+      hsub.style.transform = 'translateY(-' + (scrollY * 0.16) + 'px)';
+    }
+    if(hbtns && ready){
+      hbtns.style.opacity   = clamp(1 - p * 5.5, 0, 1) + '';
       hbtns.style.transform = 'translateY(-' + (scrollY * 0.12) + 'px)';
-      hbtns.style.opacity   = clamp(1 - p * 5, 0, 1);
     }
   }
 
   window.addEventListener('scroll', function(){
     if(!ticking){ requestAnimationFrame(update); ticking = true; }
   }, {passive:true});
-
-  /* Run once on load in case page was scrolled */
-  update();
 })();
 
-/* ── Scroll reveal ── */
+/* ── Scroll reveal — bulletproof triple-trigger ── */
 (function(){
   var els = Array.from(document.querySelectorAll('.ax'));
-  function fire(el){ if(!el.classList.contains('fired')) el.classList.add('fired'); }
-  function check(){
+
+  function fire(el){
+    if(!el.classList.contains('fired')){
+      el.classList.add('fired');
+    }
+  }
+
+  function checkAll(){
+    var vh = window.innerHeight;
     els.forEach(function(el){
       var r = el.getBoundingClientRect();
-      if(r.top < window.innerHeight * 0.92 && r.bottom > 0) fire(el);
+      if(r.top < vh * 0.94 && r.bottom > 0) fire(el);
     });
   }
-  check();
-  window.addEventListener('scroll', check, {passive:true});
+
+  /* Trigger 1: immediate above-fold check */
+  checkAll();
+
+  /* Trigger 2: scroll listener */
+  window.addEventListener('scroll', checkAll, {passive:true});
+
+  /* Trigger 3: IntersectionObserver */
   if('IntersectionObserver' in window){
     var obs = new IntersectionObserver(function(entries){
       entries.forEach(function(e){ if(e.isIntersecting) fire(e.target); });
-    }, {threshold:0.06, rootMargin:'0px 0px -20px 0px'});
+    }, {threshold:0.04, rootMargin:'0px 0px 0px 0px'});
     els.forEach(function(el){ obs.observe(el); });
   }
-  setTimeout(function(){ els.forEach(function(el){ fire(el); }); }, 1500);
+
+  /* Trigger 4: nuclear — fire everything at 800ms */
+  setTimeout(function(){
+    els.forEach(function(el){ fire(el); });
+  }, 800);
+
+  /* Trigger 5: re-check after images/fonts load */
+  window.addEventListener('load', checkAll);
+})();
+
+/* ── Section accent animations on scroll ── */
+(function(){
+  /* Portal bar chart bars: scale up sequentially */
+  var bars = Array.from(document.querySelectorAll('.sb'));
+  var barsDone = false;
+  /* Start bars at scale 0 */
+  bars.forEach(function(b){ b.style.transform = 'scaleY(0)'; b.style.transformOrigin = 'bottom'; b.style.transition = 'transform .6s cubic-bezier(.16,1,.3,1)'; });
+
+  /* Retainer table rows: stagger fade-right */
+  var retRows = Array.from(document.querySelectorAll('.ret-table tr'));
+  var retDone = false;
+  retRows.forEach(function(r){ r.style.opacity='0'; r.style.transform='translateX(-12px)'; r.style.transition='opacity .5s ease, transform .5s cubic-bezier(.16,1,.3,1)'; });
+
+  /* Feature rows (pf): already ax animated — add live pulse on icon */
+  var pfIcons = Array.from(document.querySelectorAll('.pfi'));
+
+  function checkAccents(){
+    /* Portal bars */
+    if(!barsDone && bars.length){
+      var first = bars[0].getBoundingClientRect();
+      if(first.top < window.innerHeight * 0.9){
+        barsDone = true;
+        bars.forEach(function(b, i){
+          setTimeout(function(){
+            b.style.transform = 'scaleY(1)';
+          }, i * 60);
+        });
+      }
+    }
+
+    /* Retainer table rows */
+    if(!retDone && retRows.length){
+      var firstRow = retRows[0].getBoundingClientRect();
+      if(firstRow.top < window.innerHeight * 0.9){
+        retDone = true;
+        retRows.forEach(function(r, i){
+          setTimeout(function(){
+            r.style.opacity   = '1';
+            r.style.transform = 'translateX(0)';
+          }, i * 80);
+        });
+      }
+    }
+  }
+
+  window.addEventListener('scroll', checkAccents, {passive:true});
+  checkAccents();
 })();
 
 /* ══════════════════════════════════════════════════
@@ -1266,13 +1330,15 @@ window.addEventListener('scroll', function(){ document.getElementById('nav').cla
   raf = requestAnimationFrame(draw);
 })();
 
-/* ── Stat counters ── */
+/* ── Stat + Portal number animations ── */
 (function(){
+
+  /* ── Generic stat boxes: integer count-up ── */
   var boxes = Array.from(document.querySelectorAll('.stbn[data-target]'));
-  var done = [];
-  function countUp(el, target){
+  var boxDone = [];
+  function countUpInt(el, target){
     var start = performance.now();
-    var dur = 1200;
+    var dur = 1400;
     (function step(now){
       var p = Math.min(1, (now-start)/dur);
       var ease = 1 - Math.pow(1-p, 3);
@@ -1280,16 +1346,55 @@ window.addEventListener('scroll', function(){ document.getElementById('nav').cla
       if(p<1) requestAnimationFrame(step);
     })(start);
   }
+
+  /* ── Portal dashboard stats: custom count-up ── */
+  /* +34%, 2.1x, +$28 */
+  var portalStats = [
+    { sel: '.psm:nth-child(1) .psmv', from: 0,  to: 34,  fmt: function(v){ return '+' + Math.round(v) + '%'; } },
+    { sel: '.psm:nth-child(2) .psmv', from: 0,  to: 2.1, fmt: function(v){ return v.toFixed(1) + 'x'; }, step: 0.01 },
+    { sel: '.psm:nth-child(3) .psmv', from: 0,  to: 28,  fmt: function(v){ return '+$' + Math.round(v); } }
+  ];
+  var portalDone = false;
+  var portalEl   = document.querySelector('.puisum');
+
+  function countUpPortal(stat){
+    var el = document.querySelector(stat.sel);
+    if(!el) return;
+    var start = performance.now();
+    var dur = 1600;
+    (function step(now){
+      var p = Math.min(1, (now-start)/dur);
+      var ease = 1 - Math.pow(1-p, 3);
+      var val = stat.from + (stat.to - stat.from) * ease;
+      el.textContent = stat.fmt(val);
+      if(p<1) requestAnimationFrame(step);
+    })(start);
+  }
+
+  /* ── Section scroll checks ── */
   function check(){
+    /* Stat boxes */
     boxes.forEach(function(el, i){
-      if(done[i]) return;
+      if(boxDone[i]) return;
       var r = el.getBoundingClientRect();
-      if(r.top < window.innerHeight*0.88){
-        done[i] = true;
-        setTimeout(function(){ countUp(el, +el.getAttribute('data-target')); }, i*100);
+      if(r.top < window.innerHeight * 0.88){
+        boxDone[i] = true;
+        setTimeout(function(){ countUpInt(el, +el.getAttribute('data-target')); }, i * 100);
       }
     });
+
+    /* Portal stats */
+    if(!portalDone && portalEl){
+      var r = portalEl.getBoundingClientRect();
+      if(r.top < window.innerHeight * 0.88){
+        portalDone = true;
+        portalStats.forEach(function(stat, i){
+          setTimeout(function(){ countUpPortal(stat); }, i * 200);
+        });
+      }
+    }
   }
+
   window.addEventListener('scroll', check, {passive:true});
   check();
 })();
