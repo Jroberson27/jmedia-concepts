@@ -20,7 +20,7 @@ function useFadeUp(delay) {
 }
 
 function Logo({ height=44 }) {
-  return <img src="/jmedia-logo.png" alt="JMEDIA Productions" style={{ height, mixBlendMode:"screen" }} />;
+  return <img src="/jmedia-logo.png" alt="JMEDIA" style={{ height, mixBlendMode:"screen" }} />;
 }
 
 function SectionLabel({ children }) {
@@ -32,37 +32,31 @@ function SectionLabel({ children }) {
   );
 }
 
-// ─── ROI CALCULATOR ───────────────────────────────────────────────────────────
 function ROICalculator({ hotel }) {
   const [revenue, setRevenue] = useState(5000000);
   const [otaPct, setOtaPct] = useState(40);
   const [commission, setCommission] = useState(23);
-
   const annualOTACost = Math.round(revenue * (otaPct / 100) * (commission / 100));
   const shift10 = Math.round(revenue * 0.10 * (commission / 100));
   const shift15 = Math.round(revenue * 0.15 * (commission / 100));
   const shift20 = Math.round(revenue * 0.20 * (commission / 100));
-  const retainerCost = 4500 * 12;
-  const paybackMonths = Math.round((retainerCost / shift15) * 12);
+  const payback = Math.round((4500 * 12 / shift15) * 12);
   const fmt = (n) => "$" + n.toLocaleString();
 
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
-      <div style={{ fontFamily:FONT, fontSize:10, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:8, fontWeight:600 }}>ROI Calculator</div>
-      <p style={{ fontSize:14, color:C.muted, marginBottom:32, lineHeight:1.7 }}>
-        Adjust the numbers below to see what a shift to direct bookings means for {hotel}.
-      </p>
-
+      <div style={{ fontSize:10, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:8, fontWeight:600 }}>ROI Calculator</div>
+      <p style={{ fontSize:14, color:C.muted, marginBottom:32, lineHeight:1.7 }}>Adjust the numbers to see what a shift to direct bookings means for {hotel}.</p>
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:24, marginBottom:40 }}>
         {[
-          { label:"Annual Room Revenue", value:revenue, setter:setRevenue, min:500000, max:50000000, step:250000, format:true },
+          { label:"Annual Room Revenue", value:revenue, setter:setRevenue, min:500000, max:50000000, step:250000, fmt:true },
           { label:"OTA Booking %", value:otaPct, setter:setOtaPct, min:5, max:80, step:1, suffix:"%" },
           { label:"Avg OTA Commission", value:commission, setter:setCommission, min:15, max:30, step:1, suffix:"%" },
         ].map((s, i) => (
           <div key={i}>
-            <div style={{ fontSize:10, color:C.muted, letterSpacing:"0.08em", marginBottom:8, fontWeight:600 }}>{s.label}</div>
+            <div style={{ fontSize:10, color:C.muted, marginBottom:8, fontWeight:600 }}>{s.label}</div>
             <div style={{ fontSize:24, fontWeight:300, color:C.white, marginBottom:12 }}>
-              {s.format ? "$" + Number(s.value).toLocaleString() : s.value}{s.suffix || ""}
+              {s.fmt ? "$" + Number(s.value).toLocaleString() : s.value}{s.suffix || ""}
             </div>
             <input type="range" min={s.min} max={s.max} step={s.step} value={s.value}
               onChange={e => s.setter(Number(e.target.value))}
@@ -70,33 +64,28 @@ function ROICalculator({ hotel }) {
           </div>
         ))}
       </div>
-
       <div style={{ borderTop:`1px solid ${C.border}`, paddingTop:32 }}>
-        <div style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:20, fontWeight:600 }}>Current State</div>
         <div style={{ background:C.black, border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"20px 24px", marginBottom:28 }}>
-          <div style={{ fontSize:11, color:C.muted, marginBottom:6 }}>Annual OTA commission spend at {hotel}</div>
-          <div style={{ fontSize:40, fontWeight:300, color:C.coral, lineHeight:1 }}>{fmt(annualOTACost)}</div>
+          <div style={{ fontSize:11, color:C.muted, marginBottom:6 }}>Annual OTA commission spend</div>
+          <div style={{ fontSize:40, fontWeight:300, color:C.coral }}>{fmt(annualOTACost)}</div>
         </div>
-
-        <div style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:16, fontWeight:600 }}>Direct Booking Shift Scenarios</div>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:24 }}>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:20 }}>
           {[
             { label:"10% shift to direct", saving:shift10, accent:false },
             { label:"15% shift to direct", saving:shift15, accent:true },
             { label:"20% shift to direct", saving:shift20, accent:false },
           ].map((s, i) => (
-            <div key={i} style={{ background:s.accent ? C.coral+"15" : C.black, border:`1px solid ${s.accent ? C.coral : C.border}`, padding:"20px 18px", position:"relative", overflow:"hidden" }}>
+            <div key={i} style={{ background:s.accent ? C.coral+"15" : C.black, border:`1px solid ${s.accent ? C.coral : C.border}`, padding:"20px 18px", position:"relative" }}>
               {s.accent && <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral }} />}
               <div style={{ fontSize:10, color:s.accent ? C.coral : C.muted, marginBottom:8, fontWeight:600 }}>{s.label}</div>
-              <div style={{ fontSize:28, fontWeight:300, color:s.accent ? C.coral : C.white, lineHeight:1 }}>{fmt(s.saving)}</div>
+              <div style={{ fontSize:28, fontWeight:300, color:s.accent ? C.coral : C.white }}>{fmt(s.saving)}</div>
               <div style={{ fontSize:10, color:C.muted, marginTop:6 }}>saved annually</div>
             </div>
           ))}
         </div>
-
         <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"16px 20px" }}>
           <div style={{ fontSize:13, color:C.white, lineHeight:1.75 }}>
-            At a 15% direct booking shift, {hotel} recovers the full retainer cost in approximately <span style={{ color:C.coral, fontWeight:600 }}>{paybackMonths} months</span>.
+            At a 15% direct booking shift, {hotel} recovers the full retainer cost in approximately <span style={{ color:C.coral, fontWeight:600 }}>{payback} months</span>.
           </div>
         </div>
       </div>
@@ -104,11 +93,10 @@ function ROICalculator({ hotel }) {
   );
 }
 
-// ─── PROOF BLOCK ──────────────────────────────────────────────────────────────
 function ProofBlock() {
   return (
     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2 }}>
-      <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"32px 28px", position:"relative", overflow:"hidden" }}>
+      <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"32px 28px", position:"relative" }}>
         <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral }} />
         <div style={{ fontSize:10, color:C.coral, letterSpacing:"0.1em", marginBottom:20, fontWeight:600 }}>Checked In — Universal Orlando</div>
         <div style={{ marginBottom:20 }}>
@@ -133,24 +121,23 @@ function ProofBlock() {
   );
 }
 
-// ─── CONTENT DIRECTION CARD — each card has its own state ────────────────────
 function DirectionCard({ index, direction }) {
   const [open, setOpen] = useState(index === 0);
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, overflow:"hidden" }}>
       <button onClick={() => setOpen(o => !o)} style={{ width:"100%", background:"none", border:"none", cursor:"pointer", padding:"20px 28px", display:"flex", alignItems:"center", justifyContent:"space-between", textAlign:"left" }}>
         <div style={{ display:"flex", alignItems:"center", gap:20 }}>
-          <span style={{ fontSize:10, color:C.coral, fontWeight:600 }}>{String(index + 1).padStart(2,"0")}</span>
-          <span style={{ fontSize:16, fontWeight:600, color:C.white, fontFamily:FONT }}>{direction.name}</span>
+          <span style={{ fontSize:10, color:C.coral, fontWeight:600 }}>{String(index + 1).padStart(2, "0")}</span>
+          <span style={{ fontSize:16, fontWeight:600, color:C.white }}>{direction.name}</span>
         </div>
-        <span style={{ fontSize:18, color:C.muted, transform:open?"rotate(45deg)":"rotate(0)", transition:"transform 0.25s ease", lineHeight:1 }}>+</span>
+        <span style={{ fontSize:18, color:C.muted, transform:open ? "rotate(45deg)" : "rotate(0)", transition:"transform 0.25s ease", lineHeight:1 }}>+</span>
       </button>
-      <div style={{ maxHeight:open?"220px":"0", overflow:"hidden", transition:"max-height 0.35s ease" }}>
+      <div style={{ maxHeight:open ? "220px" : "0", overflow:"hidden", transition:"max-height 0.35s ease" }}>
         <div style={{ padding:"0 28px 24px", borderTop:`1px solid ${C.border}` }}>
           <p style={{ fontSize:13, color:C.muted, lineHeight:1.8, marginTop:16, marginBottom:14 }}>{direction.angle}</p>
           <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
             {direction.formats.map((f, j) => (
-              <span key={j} style={{ fontSize:9, color:C.coral, background:C.coral+"11", border:`1px solid ${C.coralDim}`, padding:"4px 10px", letterSpacing:"0.08em" }}>{f}</span>
+              <span key={j} style={{ fontSize:9, color:C.coral, background:C.coral + "11", border:`1px solid ${C.coralDim}`, padding:"4px 10px" }}>{f}</span>
             ))}
           </div>
         </div>
@@ -159,24 +146,22 @@ function DirectionCard({ index, direction }) {
   );
 }
 
-// ─── PORTAL BLOCK ─────────────────────────────────────────────────────────────
 function PortalBlock({ hotel }) {
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, overflow:"hidden" }}>
       <div style={{ background:`linear-gradient(135deg, ${C.coral}12 0%, transparent 60%)`, padding:"40px 36px", borderBottom:`1px solid ${C.border}` }}>
         <div style={{ fontSize:10, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:12, fontWeight:600 }}>Client Portal</div>
-        <h3 style={{ fontFamily:FONT, fontSize:"clamp(20px,2.5vw,30px)", fontWeight:600, color:C.white, marginBottom:12, lineHeight:1.2 }}>
+        <h3 style={{ fontFamily:FONT, fontSize:"clamp(20px,2.5vw,28px)", fontWeight:600, color:C.white, marginBottom:12, lineHeight:1.2 }}>
           You will not just get content. You will get proof it is working.
         </h3>
         <p style={{ fontSize:14, color:C.muted, lineHeight:1.8, maxWidth:560 }}>
           Every JMEDIA partnership includes access to a dedicated client portal that connects directly to your property management system and tracks direct booking impact over the life of our engagement.
         </p>
       </div>
-
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr" }}>
         {[
           { num:"01", title:"PMS Integration", body:"The portal connects to your property management system via OAuth. Cloudbeds, Opera, Synxis, and other major platforms are supported. No manual data entry." },
-          { num:"02", title:"Direct Booking Tracking", body:"See direct booking percentage, ADR, and OTA dependency updated alongside your content calendar. One dashboard that ties content output to revenue outcomes." },
+          { num:"02", title:"Direct Booking Tracking", body:"See direct booking percentage, ADR, and OTA dependency updated alongside your content calendar. One dashboard tying content output to revenue outcomes." },
           { num:"03", title:"Monthly Reporting", body:"Every month you get a performance summary showing what shipped, what performed, and what the numbers look like. You own the data and the decisions." },
         ].map((item, i) => (
           <div key={i} style={{ padding:"28px 24px", borderRight: i < 2 ? `1px solid ${C.border}` : "none" }}>
@@ -186,18 +171,14 @@ function PortalBlock({ hotel }) {
           </div>
         ))}
       </div>
-
       <div style={{ borderTop:`1px solid ${C.border}`, padding:"20px 36px", display:"flex", alignItems:"center", gap:16 }}>
         <div style={{ width:6, height:6, borderRadius:"50%", background:C.coral, flexShrink:0 }} />
-        <p style={{ fontSize:13, color:C.muted, lineHeight:1.7 }}>
-          No other video production company operating in the independent hotel space offers PMS-connected performance tracking. This is the difference between a vendor and a partner.
-        </p>
+        <p style={{ fontSize:13, color:C.muted, lineHeight:1.7 }}>No other video production company in the independent hotel space offers PMS-connected performance tracking. This is the difference between a vendor and a partner.</p>
       </div>
     </div>
   );
 }
 
-// ─── GATE ─────────────────────────────────────────────────────────────────────
 function GateSection({ gated, onUngate, hotel }) {
   const inner = (
     <div style={{ textAlign:"center" }}>
@@ -206,24 +187,22 @@ function GateSection({ gated, onUngate, hotel }) {
       <p style={{ fontSize:13, color:C.muted, maxWidth:400, margin:"0 auto 32px", lineHeight:1.75 }}>No agenda. No pressure. I will send the PDF before we speak.</p>
       <a href={CALENDAR_URL} target="_blank" rel="noopener noreferrer"
         style={{ display:"inline-block", background:C.coral, color:"#fff", fontFamily:FONT, fontSize:11, letterSpacing:"0.12em", textTransform:"uppercase", padding:"16px 44px", textDecoration:"none", fontWeight:600 }}
-        onMouseEnter={e => e.currentTarget.style.opacity="0.85"}
-        onMouseLeave={e => e.currentTarget.style.opacity="1"}>
+        onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
+        onMouseLeave={e => e.currentTarget.style.opacity = "1"}>
         Book a Meeting to Download
       </a>
     </div>
   );
-
   if (!gated) return <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"64px 48px" }}>{inner}</div>;
-
   return (
     <div style={{ position:"relative" }}>
       <div style={{ filter:"blur(8px)", pointerEvents:"none", userSelect:"none", opacity:0.2, background:C.card, border:`1px solid ${C.border}`, padding:"64px 48px" }}>
         <div style={{ height:14, background:C.dim, borderRadius:2, width:"55%", margin:"0 auto 14px" }} />
         <div style={{ height:44, background:C.coral, width:220, margin:"0 auto" }} />
       </div>
-      <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", background:C.black+"E0", backdropFilter:"blur(4px)", padding:"64px 48px" }}>
+      <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", background:C.black + "E0", backdropFilter:"blur(4px)", padding:"64px 48px" }}>
         {inner}
-        <button onClick={onUngate} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.06em", textDecoration:"underline", marginTop:20 }}>
+        <button onClick={onUngate} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:FONT, fontSize:10, color:C.muted, textDecoration:"underline", marginTop:20 }}>
           View without downloading
         </button>
       </div>
@@ -231,11 +210,9 @@ function GateSection({ gated, onUngate, hotel }) {
   );
 }
 
-// ─── GM VIEW ──────────────────────────────────────────────────────────────────
 function GMView({ data, gated, onUngate }) {
-  const { contact, concept, propertyImages=[] } = data;
+  const { contact, concept, propertyImages = [] } = data;
   const heroImg = propertyImages[0] || null;
-
   const [heroRef, heroStyle] = useFadeUp(0);
   const [calcRef, calcStyle] = useFadeUp(0);
   const [proofRef, proofStyle] = useFadeUp(0);
@@ -246,8 +223,6 @@ function GMView({ data, gated, onUngate }) {
   return (
     <div style={{ maxWidth:"100%", overflowX:"hidden", background:C.black }}>
       <div style={{ position:"fixed", top:0, left:0, right:0, height:2, background:C.coral, zIndex:100 }} />
-
-      {/* NAV */}
       <nav style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"20px 48px", borderBottom:`1px solid ${C.border}`, background:C.black }}>
         <Logo height={48} />
         <div style={{ display:"flex", gap:20, alignItems:"center" }}>
@@ -256,48 +231,36 @@ function GMView({ data, gated, onUngate }) {
           <span style={{ fontFamily:FONT, fontSize:10, color:C.coral, letterSpacing:"0.1em" }}>{contact.company}</span>
         </div>
       </nav>
-
-      {/* HERO */}
       <div style={{ position:"relative", minHeight:"60vh", display:"flex", flexDirection:"column", justifyContent:"center" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:heroImg ? `url(${heroImg})` : "url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1600&q=80')", backgroundSize:"cover", backgroundPosition:"center", filter:"brightness(0.12) saturate(0.3)" }} />
         <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${C.black}00 0%, ${C.black}CC 60%, ${C.black} 100%)` }} />
         <div ref={heroRef} style={{ ...heroStyle, position:"relative", padding:"80px 48px", maxWidth:860 }}>
           <div style={{ fontFamily:FONT, fontSize:10, color:C.coral, letterSpacing:"0.14em", textTransform:"uppercase", marginBottom:20, fontWeight:600 }}>Prepared exclusively for {contact.company}</div>
-          <h1 style={{ fontFamily:FONT, fontSize:"clamp(32px,5vw,60px)", fontWeight:700, lineHeight:1.1, color:C.white, marginBottom:24, letterSpacing:"-0.02em" }}>
-            {concept.headline}
-          </h1>
+          <h1 style={{ fontFamily:FONT, fontSize:"clamp(32px,5vw,60px)", fontWeight:700, lineHeight:1.1, color:C.white, marginBottom:24, letterSpacing:"-0.02em" }}>{concept.headline}</h1>
           <p style={{ fontSize:16, color:C.muted, lineHeight:1.85, maxWidth:560, marginBottom:32 }}>{concept.opening}</p>
           {contact.jmedia_outreach_hook && (
-            <div style={{ background:C.coral+"12", border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"16px 20px", maxWidth:560 }}>
+            <div style={{ background:C.coral + "12", border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"16px 20px", maxWidth:560 }}>
               <p style={{ fontSize:13, color:C.white, lineHeight:1.75 }}>{contact.jmedia_outreach_hook}</p>
             </div>
           )}
         </div>
       </div>
-
-      {/* ROI CALCULATOR */}
       <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
         <div ref={calcRef} style={{ ...calcStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>The OTA Math for {contact.company}</SectionLabel>
           <ROICalculator hotel={contact.company} />
         </div>
       </div>
-
-      {/* PROOF */}
       <div style={{ padding:"80px 48px" }}>
         <div ref={proofRef} style={{ ...proofStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>Proven at scale</SectionLabel>
           <ProofBlock />
         </div>
       </div>
-
-      {/* CONTENT DIRECTIONS */}
       <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
         <div ref={dirRef} style={{ ...dirStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>What this looks like for {contact.company}</SectionLabel>
-          <p style={{ fontSize:14, color:C.muted, lineHeight:1.8, maxWidth:600, marginBottom:28 }}>
-            Three content directions specific to your property. Each one is designed to move guests from discovery to direct booking.
-          </p>
+          <p style={{ fontSize:14, color:C.muted, lineHeight:1.8, maxWidth:600, marginBottom:28 }}>Three content directions specific to your property, each designed to move guests from discovery to direct booking.</p>
           <div style={{ display:"flex", flexDirection:"column", gap:2 }}>
             {concept.content_directions.map((dir, i) => (
               <DirectionCard key={i} index={i} direction={dir} />
@@ -305,32 +268,25 @@ function GMView({ data, gated, onUngate }) {
           </div>
         </div>
       </div>
-
-      {/* PORTAL */}
       <div style={{ padding:"80px 48px" }}>
         <div ref={portalRef} style={{ ...portalStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>How you track results</SectionLabel>
           <PortalBlock hotel={contact.company} />
         </div>
       </div>
-
-      {/* GATE */}
       <div style={{ padding:"0 48px 100px" }}>
         <div ref={gateRef} style={{ ...gateStyle, maxWidth:860, margin:"0 auto" }}>
           <GateSection gated={gated} onUngate={onUngate} hotel={contact.company} />
         </div>
       </div>
-
-      {/* FOOTER */}
       <footer style={{ borderTop:`1px solid ${C.border}`, padding:"24px 48px", display:"flex", justifyContent:"space-between", alignItems:"center", background:C.black }}>
         <Logo height={28} />
-        <span style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.06em" }}>Confidential / {contact.company} / {new Date().getFullYear()}</span>
+        <span style={{ fontFamily:FONT, fontSize:10, color:C.muted }}>{contact.company} / {new Date().getFullYear()}</span>
       </footer>
     </div>
   );
 }
 
-// ─── MAIN ─────────────────────────────────────────────────────────────────────
 function GMPage() {
   const [state, setState] = useState("loading");
   const [data, setData] = useState(null);
@@ -341,7 +297,6 @@ function GMPage() {
     const params = new URLSearchParams(window.location.search);
     const isPreview = params.get("preview") === "true";
     const id = params.get("id");
-
     if (!isPreview) {
       const onContextMenu = (e) => e.preventDefault();
       const onKeyDown = (e) => {
@@ -353,19 +308,17 @@ function GMPage() {
       document.addEventListener("contextmenu", onContextMenu);
       document.addEventListener("keydown", onKeyDown);
     }
-
     if (!id) { setError("No contact ID in URL."); setState("error"); return; }
-
     fetch("/api/concept?id=" + id)
       .then(r => r.json())
       .then(d => {
         if (d.error) throw new Error(d.error);
         setData(d);
         setState("ready");
-        if (d.contact?.website) {
+        if (d.contact && d.contact.website) {
           fetch("/api/images?website=" + encodeURIComponent(d.contact.website))
             .then(r => r.json())
-            .then(img => { if (img.images?.length) setData(prev => ({ ...prev, propertyImages: img.images })); })
+            .then(img => { if (img.images && img.images.length) setData(prev => ({ ...prev, propertyImages: img.images })); })
             .catch(() => {});
         }
       })
@@ -377,31 +330,28 @@ function GMPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { background: #0A0A0A; color: #F4F2EE; font-family: ${FONT}; -webkit-font-smoothing: antialiased; }
+        html, body { background: #0A0A0A; color: #F4F2EE; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
         ::selection { background: #E8625A; color: #fff; }
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: #0A0A0A; }
         ::-webkit-scrollbar-thumb { background: #2A2A2A; }
         @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
       `}</style>
-
       {state === "loading" && (
-        <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:32, background:C.black }}>
+        <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:32, background:"#0A0A0A" }}>
           <Logo height={48} />
           <div style={{ display:"flex", gap:8 }}>
-            {[0,1,2].map(i => <div key={i} style={{ width:5, height:5, borderRadius:"50%", background:C.coral, animation:`pulse 1.2s ease ${i*0.2}s infinite` }} />)}
+            {[0,1,2].map(i => <div key={i} style={{ width:5, height:5, borderRadius:"50%", background:"#E8625A", animation:`pulse 1.2s ease ${i*0.2}s infinite` }} />)}
           </div>
-          <p style={{ fontFamily:FONT, fontSize:11, color:C.muted, letterSpacing:"0.12em" }}>Building your revenue briefing</p>
+          <p style={{ fontFamily:"'Inter', system-ui, sans-serif", fontSize:11, color:"#666666", letterSpacing:"0.12em" }}>Building your revenue briefing</p>
         </div>
       )}
-
       {state === "error" && (
         <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:20, padding:"0 24px", textAlign:"center" }}>
           <Logo height={44} />
-          <p style={{ color:C.muted, fontSize:14 }}>{error || "Something went wrong."}</p>
+          <p style={{ color:"#666666", fontSize:14 }}>{error || "Something went wrong."}</p>
         </div>
       )}
-
       {state === "ready" && data && (
         <GMView data={data} gated={gated} onUngate={() => setGated(false)} />
       )}
@@ -410,6 +360,3 @@ function GMPage() {
 }
 
 export default dynamic(() => Promise.resolve(GMPage), { ssr: false });
-ENDOFSCRIPT
-
-echo "done — $(wc -l < /mnt/user-data/outputs/gm.jsx) lines"
