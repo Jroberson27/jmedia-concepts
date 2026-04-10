@@ -23,6 +23,15 @@ function Logo({ height=44 }) {
   return <img src="/jmedia-logo.png" alt="JMEDIA Productions" style={{ height, mixBlendMode:"screen" }} />;
 }
 
+function SectionLabel({ children }) {
+  return (
+    <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:32 }}>
+      <div style={{ width:20, height:1, background:C.coral }} />
+      <span style={{ fontFamily:FONT, fontSize:11, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600 }}>{children}</span>
+    </div>
+  );
+}
+
 // ─── ROI CALCULATOR ───────────────────────────────────────────────────────────
 function ROICalculator({ hotel }) {
   const [revenue, setRevenue] = useState(5000000);
@@ -34,8 +43,7 @@ function ROICalculator({ hotel }) {
   const shift15 = Math.round(revenue * 0.15 * (commission / 100));
   const shift20 = Math.round(revenue * 0.20 * (commission / 100));
   const retainerCost = 4500 * 12;
-  const payback = Math.round((retainerCost / shift15) * 12);
-
+  const paybackMonths = Math.round((retainerCost / shift15) * 12);
   const fmt = (n) => "$" + n.toLocaleString();
 
   return (
@@ -47,14 +55,14 @@ function ROICalculator({ hotel }) {
 
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:24, marginBottom:40 }}>
         {[
-          { label:"Annual Room Revenue", value:revenue, setter:setRevenue, min:500000, max:50000000, step:250000, prefix:"$", format:true },
+          { label:"Annual Room Revenue", value:revenue, setter:setRevenue, min:500000, max:50000000, step:250000, format:true },
           { label:"OTA Booking %", value:otaPct, setter:setOtaPct, min:5, max:80, step:1, suffix:"%" },
           { label:"Avg OTA Commission", value:commission, setter:setCommission, min:15, max:30, step:1, suffix:"%" },
         ].map((s, i) => (
           <div key={i}>
             <div style={{ fontSize:10, color:C.muted, letterSpacing:"0.08em", marginBottom:8, fontWeight:600 }}>{s.label}</div>
             <div style={{ fontSize:24, fontWeight:300, color:C.white, marginBottom:12 }}>
-              {s.prefix || ""}{s.format ? Number(s.value).toLocaleString() : s.value}{s.suffix || ""}
+              {s.format ? "$" + Number(s.value).toLocaleString() : s.value}{s.suffix || ""}
             </div>
             <input type="range" min={s.min} max={s.max} step={s.step} value={s.value}
               onChange={e => s.setter(Number(e.target.value))}
@@ -65,17 +73,17 @@ function ROICalculator({ hotel }) {
 
       <div style={{ borderTop:`1px solid ${C.border}`, paddingTop:32 }}>
         <div style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:20, fontWeight:600 }}>Current State</div>
-        <div style={{ background:C.black, border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"20px 24px", marginBottom:24 }}>
-          <div style={{ fontSize:11, color:C.muted, marginBottom:6 }}>Annual OTA commission spend</div>
+        <div style={{ background:C.black, border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"20px 24px", marginBottom:28 }}>
+          <div style={{ fontSize:11, color:C.muted, marginBottom:6 }}>Annual OTA commission spend at {hotel}</div>
           <div style={{ fontSize:40, fontWeight:300, color:C.coral, lineHeight:1 }}>{fmt(annualOTACost)}</div>
         </div>
 
         <div style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:16, fontWeight:600 }}>Direct Booking Shift Scenarios</div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:24 }}>
           {[
-            { label:"10% shift to direct", saving:shift10 },
+            { label:"10% shift to direct", saving:shift10, accent:false },
             { label:"15% shift to direct", saving:shift15, accent:true },
-            { label:"20% shift to direct", saving:shift20 },
+            { label:"20% shift to direct", saving:shift20, accent:false },
           ].map((s, i) => (
             <div key={i} style={{ background:s.accent ? C.coral+"15" : C.black, border:`1px solid ${s.accent ? C.coral : C.border}`, padding:"20px 18px", position:"relative", overflow:"hidden" }}>
               {s.accent && <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral }} />}
@@ -86,10 +94,9 @@ function ROICalculator({ hotel }) {
           ))}
         </div>
 
-        <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"16px 20px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-          <div>
-            <div style={{ fontSize:10, color:C.muted, marginBottom:4 }}>Retainer cost vs. 15% shift savings</div>
-            <div style={{ fontSize:13, color:C.white }}>At a 15% direct booking shift, {hotel} recovers the full retainer cost in approximately <span style={{ color:C.coral, fontWeight:600 }}>{payback} months</span>.</div>
+        <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"16px 20px" }}>
+          <div style={{ fontSize:13, color:C.white, lineHeight:1.75 }}>
+            At a 15% direct booking shift, {hotel} recovers the full retainer cost in approximately <span style={{ color:C.coral, fontWeight:600 }}>{paybackMonths} months</span>.
           </div>
         </div>
       </div>
@@ -103,15 +110,19 @@ function ProofBlock() {
     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2 }}>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"32px 28px", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral }} />
-        <div style={{ fontSize:10, color:C.coral, letterSpacing:"0.1em", marginBottom:16, fontWeight:600 }}>Checked In — Universal Orlando</div>
-        <div style={{ fontSize:48, fontWeight:300, color:C.white, lineHeight:1, marginBottom:8 }}>1.5M</div>
-        <div style={{ fontSize:12, color:C.muted, marginBottom:20 }}>views per episode average</div>
-        <div style={{ fontSize:48, fontWeight:300, color:C.white, lineHeight:1, marginBottom:8 }}>69%</div>
-        <div style={{ fontSize:12, color:C.muted }}>watch completion rate</div>
+        <div style={{ fontSize:10, color:C.coral, letterSpacing:"0.1em", marginBottom:20, fontWeight:600 }}>Checked In — Universal Orlando</div>
+        <div style={{ marginBottom:20 }}>
+          <div style={{ fontSize:48, fontWeight:300, color:C.white, lineHeight:1, marginBottom:6 }}>1.5M</div>
+          <div style={{ fontSize:12, color:C.muted }}>views per episode average</div>
+        </div>
+        <div>
+          <div style={{ fontSize:48, fontWeight:300, color:C.white, lineHeight:1, marginBottom:6 }}>69%</div>
+          <div style={{ fontSize:12, color:C.muted }}>watch completion rate</div>
+        </div>
       </div>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"32px 28px" }}>
         <div style={{ fontSize:10, color:C.muted, letterSpacing:"0.1em", marginBottom:16, fontWeight:600 }}>Industry Validation</div>
-        <p style={{ fontSize:14, color:C.white, lineHeight:1.85, marginBottom:16 }}>
+        <p style={{ fontSize:14, color:C.white, lineHeight:1.85, marginBottom:20 }}>
           Lowe's Hotels launched a dedicated YouTube channel to syndicate the Checked In series after seeing its direct booking impact on Universal Orlando.
         </p>
         <p style={{ fontSize:13, color:C.muted, lineHeight:1.8 }}>
@@ -122,37 +133,51 @@ function ProofBlock() {
   );
 }
 
+// ─── CONTENT DIRECTION CARD — each card has its own state ────────────────────
+function DirectionCard({ index, direction }) {
+  const [open, setOpen] = useState(index === 0);
+  return (
+    <div style={{ background:C.card, border:`1px solid ${C.border}`, overflow:"hidden" }}>
+      <button onClick={() => setOpen(o => !o)} style={{ width:"100%", background:"none", border:"none", cursor:"pointer", padding:"20px 28px", display:"flex", alignItems:"center", justifyContent:"space-between", textAlign:"left" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:20 }}>
+          <span style={{ fontSize:10, color:C.coral, fontWeight:600 }}>{String(index + 1).padStart(2,"0")}</span>
+          <span style={{ fontSize:16, fontWeight:600, color:C.white, fontFamily:FONT }}>{direction.name}</span>
+        </div>
+        <span style={{ fontSize:18, color:C.muted, transform:open?"rotate(45deg)":"rotate(0)", transition:"transform 0.25s ease", lineHeight:1 }}>+</span>
+      </button>
+      <div style={{ maxHeight:open?"220px":"0", overflow:"hidden", transition:"max-height 0.35s ease" }}>
+        <div style={{ padding:"0 28px 24px", borderTop:`1px solid ${C.border}` }}>
+          <p style={{ fontSize:13, color:C.muted, lineHeight:1.8, marginTop:16, marginBottom:14 }}>{direction.angle}</p>
+          <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
+            {direction.formats.map((f, j) => (
+              <span key={j} style={{ fontSize:9, color:C.coral, background:C.coral+"11", border:`1px solid ${C.coralDim}`, padding:"4px 10px", letterSpacing:"0.08em" }}>{f}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── PORTAL BLOCK ─────────────────────────────────────────────────────────────
 function PortalBlock({ hotel }) {
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, overflow:"hidden" }}>
-      <div style={{ background:`linear-gradient(135deg, ${C.coral}15 0%, transparent 60%)`, padding:"40px 36px", borderBottom:`1px solid ${C.border}` }}>
+      <div style={{ background:`linear-gradient(135deg, ${C.coral}12 0%, transparent 60%)`, padding:"40px 36px", borderBottom:`1px solid ${C.border}` }}>
         <div style={{ fontSize:10, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:12, fontWeight:600 }}>Client Portal</div>
-        <h3 style={{ fontFamily:FONT, fontSize:"clamp(22px, 3vw, 32px)", fontWeight:600, color:C.white, marginBottom:12, lineHeight:1.2 }}>
+        <h3 style={{ fontFamily:FONT, fontSize:"clamp(20px,2.5vw,30px)", fontWeight:600, color:C.white, marginBottom:12, lineHeight:1.2 }}>
           You will not just get content. You will get proof it is working.
         </h3>
-        <p style={{ fontSize:15, color:C.muted, lineHeight:1.8, maxWidth:560 }}>
+        <p style={{ fontSize:14, color:C.muted, lineHeight:1.8, maxWidth:560 }}>
           Every JMEDIA partnership includes access to a dedicated client portal that connects directly to your property management system and tracks direct booking impact over the life of our engagement.
         </p>
       </div>
 
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:0 }}>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr" }}>
         {[
-          {
-            num:"01",
-            title:"PMS Integration",
-            body:"The portal connects to your property management system via OAuth. Cloudbeds, Opera, Synxis, and other major platforms are supported. No manual data entry, no spreadsheets."
-          },
-          {
-            num:"02",
-            title:"Direct Booking Tracking",
-            body:"See direct booking percentage, ADR, and OTA dependency trend updated in real time alongside your content calendar. One dashboard that ties content output to revenue outcomes."
-          },
-          {
-            num:"03",
-            title:"Monthly Reporting",
-            body:"Every month you get a performance summary showing what shipped, what performed, and what the numbers look like. You own the data and the decisions."
-          },
+          { num:"01", title:"PMS Integration", body:"The portal connects to your property management system via OAuth. Cloudbeds, Opera, Synxis, and other major platforms are supported. No manual data entry." },
+          { num:"02", title:"Direct Booking Tracking", body:"See direct booking percentage, ADR, and OTA dependency updated alongside your content calendar. One dashboard that ties content output to revenue outcomes." },
+          { num:"03", title:"Monthly Reporting", body:"Every month you get a performance summary showing what shipped, what performed, and what the numbers look like. You own the data and the decisions." },
         ].map((item, i) => (
           <div key={i} style={{ padding:"28px 24px", borderRight: i < 2 ? `1px solid ${C.border}` : "none" }}>
             <div style={{ fontSize:10, color:C.coral, fontWeight:600, marginBottom:12 }}>{item.num}</div>
@@ -168,38 +193,6 @@ function PortalBlock({ hotel }) {
           No other video production company operating in the independent hotel space offers PMS-connected performance tracking. This is the difference between a vendor and a partner.
         </p>
       </div>
-    </div>
-  );
-}
-
-// ─── CONTENT DIRECTIONS ───────────────────────────────────────────────────────
-function ContentDirections({ directions }) {
-  return (
-    <div style={{ display:"flex", flexDirection:"column", gap:2 }}>
-      {directions.map((dir, i) => {
-        const [open, setOpen] = useState(i === 0);
-        return (
-          <div key={i} style={{ background:C.card, border:`1px solid ${C.border}`, overflow:"hidden" }}>
-            <button onClick={() => setOpen(o => !o)} style={{ width:"100%", background:"none", border:"none", cursor:"pointer", padding:"20px 28px", display:"flex", alignItems:"center", justifyContent:"space-between", textAlign:"left" }}>
-              <div style={{ display:"flex", alignItems:"center", gap:20 }}>
-                <span style={{ fontSize:10, color:C.coral, fontWeight:600 }}>{String(i+1).padStart(2,"0")}</span>
-                <span style={{ fontSize:16, fontWeight:600, color:C.white, fontFamily:FONT }}>{dir.name}</span>
-              </div>
-              <span style={{ fontSize:18, color:C.muted, transform:open?"rotate(45deg)":"rotate(0)", transition:"transform 0.25s ease", lineHeight:1 }}>+</span>
-            </button>
-            <div style={{ maxHeight:open?"200px":"0", overflow:"hidden", transition:"max-height 0.35s ease" }}>
-              <div style={{ padding:"0 28px 24px", borderTop:`1px solid ${C.border}` }}>
-                <p style={{ fontSize:13, color:C.muted, lineHeight:1.8, marginTop:16, marginBottom:14 }}>{dir.angle}</p>
-                <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
-                  {dir.formats.map((f, j) => (
-                    <span key={j} style={{ fontSize:9, color:C.coral, background:C.coral+"11", border:`1px solid ${C.coralDim}`, padding:"4px 10px", letterSpacing:"0.08em" }}>{f}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      })}
     </div>
   );
 }
@@ -221,6 +214,7 @@ function GateSection({ gated, onUngate, hotel }) {
   );
 
   if (!gated) return <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"64px 48px" }}>{inner}</div>;
+
   return (
     <div style={{ position:"relative" }}>
       <div style={{ filter:"blur(8px)", pointerEvents:"none", userSelect:"none", opacity:0.2, background:C.card, border:`1px solid ${C.border}`, padding:"64px 48px" }}>
@@ -250,13 +244,11 @@ function GMView({ data, gated, onUngate }) {
   const [gateRef, gateStyle] = useFadeUp(0);
 
   return (
-    <div style={{ maxWidth:"100%", overflowX:"hidden", background:C.black }} className="protected-content">
-
-      {/* TOP BAR */}
-      <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral, zIndex:10 }} />
+    <div style={{ maxWidth:"100%", overflowX:"hidden", background:C.black }}>
+      <div style={{ position:"fixed", top:0, left:0, right:0, height:2, background:C.coral, zIndex:100 }} />
 
       {/* NAV */}
-      <nav style={{ position:"relative", display:"flex", justifyContent:"space-between", alignItems:"center", padding:"20px 48px", borderBottom:`1px solid ${C.border}`, background:C.black, zIndex:5 }}>
+      <nav style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"20px 48px", borderBottom:`1px solid ${C.border}`, background:C.black }}>
         <Logo height={48} />
         <div style={{ display:"flex", gap:20, alignItems:"center" }}>
           <span style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.1em" }}>General Manager Briefing</span>
@@ -271,23 +263,22 @@ function GMView({ data, gated, onUngate }) {
         <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${C.black}00 0%, ${C.black}CC 60%, ${C.black} 100%)` }} />
         <div ref={heroRef} style={{ ...heroStyle, position:"relative", padding:"80px 48px", maxWidth:860 }}>
           <div style={{ fontFamily:FONT, fontSize:10, color:C.coral, letterSpacing:"0.14em", textTransform:"uppercase", marginBottom:20, fontWeight:600 }}>Prepared exclusively for {contact.company}</div>
-          <h1 style={{ fontFamily:FONT, fontSize:"clamp(36px,5.5vw,64px)", fontWeight:700, lineHeight:1.1, color:C.white, marginBottom:24, letterSpacing:"-0.02em" }}>
+          <h1 style={{ fontFamily:FONT, fontSize:"clamp(32px,5vw,60px)", fontWeight:700, lineHeight:1.1, color:C.white, marginBottom:24, letterSpacing:"-0.02em" }}>
             {concept.headline}
           </h1>
           <p style={{ fontSize:16, color:C.muted, lineHeight:1.85, maxWidth:560, marginBottom:32 }}>{concept.opening}</p>
-          <div style={{ background:C.coral+"15", border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"16px 20px", maxWidth:560 }}>
-            <p style={{ fontSize:13, color:C.white, lineHeight:1.75 }}>{contact.jmedia_outreach_hook}</p>
-          </div>
+          {contact.jmedia_outreach_hook && (
+            <div style={{ background:C.coral+"12", border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"16px 20px", maxWidth:560 }}>
+              <p style={{ fontSize:13, color:C.white, lineHeight:1.75 }}>{contact.jmedia_outreach_hook}</p>
+            </div>
+          )}
         </div>
       </div>
 
       {/* ROI CALCULATOR */}
       <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
         <div ref={calcRef} style={{ ...calcStyle, maxWidth:860, margin:"0 auto" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:32 }}>
-            <div style={{ width:20, height:1, background:C.coral }} />
-            <span style={{ fontFamily:FONT, fontSize:11, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600 }}>The OTA Math for {contact.company}</span>
-          </div>
+          <SectionLabel>The OTA Math for {contact.company}</SectionLabel>
           <ROICalculator hotel={contact.company} />
         </div>
       </div>
@@ -295,35 +286,30 @@ function GMView({ data, gated, onUngate }) {
       {/* PROOF */}
       <div style={{ padding:"80px 48px" }}>
         <div ref={proofRef} style={{ ...proofStyle, maxWidth:860, margin:"0 auto" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:32 }}>
-            <div style={{ width:20, height:1, background:C.coral }} />
-            <span style={{ fontFamily:FONT, fontSize:11, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600 }}>Proven at scale</span>
-          </div>
+          <SectionLabel>Proven at scale</SectionLabel>
           <ProofBlock />
         </div>
       </div>
 
       {/* CONTENT DIRECTIONS */}
-      <div style={{ padding:"0 48px 80px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
-        <div ref={dirRef} style={{ ...dirStyle, maxWidth:860, margin:"0 auto", paddingTop:80 }}>
-          <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:12 }}>
-            <div style={{ width:20, height:1, background:C.coral }} />
-            <span style={{ fontFamily:FONT, fontSize:11, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600 }}>What this looks like for {contact.company}</span>
-          </div>
-          <p style={{ fontSize:14, color:C.muted, lineHeight:1.8, maxWidth:600, marginBottom:32 }}>
+      <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
+        <div ref={dirRef} style={{ ...dirStyle, maxWidth:860, margin:"0 auto" }}>
+          <SectionLabel>What this looks like for {contact.company}</SectionLabel>
+          <p style={{ fontSize:14, color:C.muted, lineHeight:1.8, maxWidth:600, marginBottom:28 }}>
             Three content directions specific to your property. Each one is designed to move guests from discovery to direct booking.
           </p>
-          <ContentDirections directions={concept.content_directions} />
+          <div style={{ display:"flex", flexDirection:"column", gap:2 }}>
+            {concept.content_directions.map((dir, i) => (
+              <DirectionCard key={i} index={i} direction={dir} />
+            ))}
+          </div>
         </div>
       </div>
 
       {/* PORTAL */}
       <div style={{ padding:"80px 48px" }}>
         <div ref={portalRef} style={{ ...portalStyle, maxWidth:860, margin:"0 auto" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:32 }}>
-            <div style={{ width:20, height:1, background:C.coral }} />
-            <span style={{ fontFamily:FONT, fontSize:11, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600 }}>How you track results</span>
-          </div>
+          <SectionLabel>How you track results</SectionLabel>
           <PortalBlock hotel={contact.company} />
         </div>
       </div>
@@ -344,7 +330,7 @@ function GMView({ data, gated, onUngate }) {
   );
 }
 
-// ─── MAIN PAGE ────────────────────────────────────────────────────────────────
+// ─── MAIN ─────────────────────────────────────────────────────────────────────
 function GMPage() {
   const [state, setState] = useState("loading");
   const [data, setData] = useState(null);
@@ -352,25 +338,22 @@ function GMPage() {
   const [gated, setGated] = useState(true);
 
   useEffect(() => {
-    const isPreview = new URLSearchParams(window.location.search).get("preview") === "true";
+    const params = new URLSearchParams(window.location.search);
+    const isPreview = params.get("preview") === "true";
+    const id = params.get("id");
 
     if (!isPreview) {
       const onContextMenu = (e) => e.preventDefault();
-      document.addEventListener("contextmenu", onContextMenu);
       const onKeyDown = (e) => {
         if ((e.metaKey || e.ctrlKey) && e.key === "p") {
           e.preventDefault();
           alert("To download this concept, please book a meeting using the button below.");
         }
       };
+      document.addEventListener("contextmenu", onContextMenu);
       document.addEventListener("keydown", onKeyDown);
-      return () => {
-        document.removeEventListener("contextmenu", onContextMenu);
-        document.removeEventListener("keydown", onKeyDown);
-      };
     }
 
-    const id = new URLSearchParams(window.location.search).get("id");
     if (!id) { setError("No contact ID in URL."); setState("error"); return; }
 
     fetch("/api/concept?id=" + id)
@@ -399,12 +382,7 @@ function GMPage() {
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: #0A0A0A; }
         ::-webkit-scrollbar-thumb { background: #2A2A2A; }
-        input[type=range] { height: 2px; }
         @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
-        @media (max-width: 768px) {
-          .grid-2 { grid-template-columns: 1fr !important; }
-          .grid-3 { grid-template-columns: 1fr !important; }
-        }
       `}</style>
 
       {state === "loading" && (
@@ -432,3 +410,6 @@ function GMPage() {
 }
 
 export default dynamic(() => Promise.resolve(GMPage), { ssr: false });
+ENDOFSCRIPT
+
+echo "done — $(wc -l < /mnt/user-data/outputs/gm.jsx) lines"
