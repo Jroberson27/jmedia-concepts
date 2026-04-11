@@ -27,7 +27,7 @@ function SectionLabel({ children }) {
   return (
     <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:32 }}>
       <div style={{ width:20, height:1, background:C.coral }} />
-      <span style={{ fontFamily:FONT, fontSize:11, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600 }}>{children}</span>
+      <span style={{ fontFamily:FONT, fontSize:13, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600 }}>{children}</span>
     </div>
   );
 }
@@ -45,8 +45,8 @@ function ROICalculator({ hotel }) {
 
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
-      <div style={{ fontSize:10, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:8, fontWeight:600 }}>ROI Calculator</div>
-      <p style={{ fontSize:14, color:C.muted, marginBottom:32, lineHeight:1.7 }}>Adjust the numbers to see what a shift to direct bookings means for {hotel}.</p>
+      <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:8, fontWeight:600 }}>ROI Calculator</div>
+      <p style={{ fontSize:16, color:C.muted, marginBottom:32, lineHeight:1.7 }}>Adjust the numbers to see what a shift to direct bookings means for {hotel}.</p>
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:24, marginBottom:40 }}>
         {[
           { label:"Annual Room Revenue", value:revenue, setter:setRevenue, min:500000, max:50000000, step:250000, fmt:true },
@@ -54,7 +54,7 @@ function ROICalculator({ hotel }) {
           { label:"Avg OTA Commission", value:commission, setter:setCommission, min:15, max:30, step:1, suffix:"%" },
         ].map((s, i) => (
           <div key={i}>
-            <div style={{ fontSize:10, color:C.muted, marginBottom:8, fontWeight:600 }}>{s.label}</div>
+            <div style={{ fontSize:13, color:C.muted, marginBottom:8, fontWeight:600 }}>{s.label}</div>
             <div style={{ fontSize:24, fontWeight:300, color:C.white, marginBottom:12 }}>
               {s.fmt ? "$" + Number(s.value).toLocaleString() : s.value}{s.suffix || ""}
             </div>
@@ -66,7 +66,7 @@ function ROICalculator({ hotel }) {
       </div>
       <div style={{ borderTop:`1px solid ${C.border}`, paddingTop:32 }}>
         <div style={{ background:C.black, border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"20px 24px", marginBottom:28 }}>
-          <div style={{ fontSize:11, color:C.muted, marginBottom:6 }}>Annual OTA commission spend</div>
+          <div style={{ fontSize:14, color:C.muted, marginBottom:6 }}>Annual OTA commission spend</div>
           <div style={{ fontSize:40, fontWeight:300, color:C.coral }}>{fmt(annualOTACost)}</div>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:20 }}>
@@ -77,14 +77,14 @@ function ROICalculator({ hotel }) {
           ].map((s, i) => (
             <div key={i} style={{ background:s.accent ? C.coral+"15" : C.black, border:`1px solid ${s.accent ? C.coral : C.border}`, padding:"20px 18px", position:"relative" }}>
               {s.accent && <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral }} />}
-              <div style={{ fontSize:10, color:s.accent ? C.coral : C.muted, marginBottom:8, fontWeight:600 }}>{s.label}</div>
+              <div style={{ fontSize:13, color:s.accent ? C.coral : C.muted, marginBottom:8, fontWeight:600 }}>{s.label}</div>
               <div style={{ fontSize:28, fontWeight:300, color:s.accent ? C.coral : C.white }}>{fmt(s.saving)}</div>
-              <div style={{ fontSize:10, color:C.muted, marginTop:6 }}>saved annually</div>
+              <div style={{ fontSize:13, color:C.muted, marginTop:6 }}>saved annually</div>
             </div>
           ))}
         </div>
         <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"16px 20px" }}>
-          <div style={{ fontSize:13, color:C.white, lineHeight:1.75 }}>
+          <div style={{ fontSize:15, color:C.white, lineHeight:1.75 }}>
             At a 15% direct booking shift, {hotel} recovers the full retainer cost in approximately <span style={{ color:C.coral, fontWeight:600 }}>{payback} months</span>.
           </div>
         </div>
@@ -98,22 +98,22 @@ function ProofBlock() {
     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2 }}>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"32px 28px", position:"relative" }}>
         <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral }} />
-        <div style={{ fontSize:10, color:C.coral, letterSpacing:"0.1em", marginBottom:20, fontWeight:600 }}>Checked In — Universal Orlando</div>
+        <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", marginBottom:20, fontWeight:600 }}>Checked In — Universal Orlando</div>
         <div style={{ marginBottom:20 }}>
           <div style={{ fontSize:48, fontWeight:300, color:C.white, lineHeight:1, marginBottom:6 }}>1.5M</div>
-          <div style={{ fontSize:12, color:C.muted }}>views per episode average</div>
+          <div style={{ fontSize:15, color:C.muted }}>views per episode average</div>
         </div>
         <div>
           <div style={{ fontSize:48, fontWeight:300, color:C.white, lineHeight:1, marginBottom:6 }}>69%</div>
-          <div style={{ fontSize:12, color:C.muted }}>watch completion rate</div>
+          <div style={{ fontSize:15, color:C.muted }}>watch completion rate</div>
         </div>
       </div>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"32px 28px" }}>
-        <div style={{ fontSize:10, color:C.muted, letterSpacing:"0.1em", marginBottom:16, fontWeight:600 }}>Industry Validation</div>
-        <p style={{ fontSize:14, color:C.white, lineHeight:1.85, marginBottom:20 }}>
+        <div style={{ fontSize:12, color:C.muted, letterSpacing:"0.1em", marginBottom:16, fontWeight:600 }}>Industry Validation</div>
+        <p style={{ fontSize:16, color:C.white, lineHeight:1.85, marginBottom:20 }}>
           Lowe's Hotels launched a dedicated YouTube channel to syndicate the Checked In series after seeing its direct booking impact on Universal Orlando.
         </p>
-        <p style={{ fontSize:13, color:C.muted, lineHeight:1.8 }}>
+        <p style={{ fontSize:15, color:C.muted, lineHeight:1.8 }}>
           When a branded hotel group builds a distribution channel around your content model, that is proof of concept at scale. That same approach is what I bring to independent properties.
         </p>
       </div>
@@ -127,14 +127,14 @@ function DirectionCard({ index, direction }) {
     <div style={{ background:C.card, border:`1px solid ${C.border}`, overflow:"hidden" }}>
       <button onClick={() => setOpen(o => !o)} style={{ width:"100%", background:"none", border:"none", cursor:"pointer", padding:"20px 28px", display:"flex", alignItems:"center", justifyContent:"space-between", textAlign:"left" }}>
         <div style={{ display:"flex", alignItems:"center", gap:20 }}>
-          <span style={{ fontSize:10, color:C.coral, fontWeight:600 }}>{String(index + 1).padStart(2, "0")}</span>
-          <span style={{ fontSize:16, fontWeight:600, color:C.white }}>{direction.name}</span>
+          <span style={{ fontSize:13, color:C.coral, fontWeight:600 }}>{String(index + 1).padStart(2, "0")}</span>
+          <span style={{ fontSize:18, fontWeight:600, color:C.white }}>{direction.name}</span>
         </div>
         <span style={{ fontSize:18, color:C.muted, transform:open ? "rotate(45deg)" : "rotate(0)", transition:"transform 0.25s ease", lineHeight:1 }}>+</span>
       </button>
       <div style={{ maxHeight:open ? "220px" : "0", overflow:"hidden", transition:"max-height 0.35s ease" }}>
         <div style={{ padding:"0 28px 24px", borderTop:`1px solid ${C.border}` }}>
-          <p style={{ fontSize:13, color:C.muted, lineHeight:1.8, marginTop:16, marginBottom:14 }}>{direction.angle}</p>
+          <p style={{ fontSize:15, color:C.muted, lineHeight:1.8, marginTop:16, marginBottom:14 }}>{direction.angle}</p>
           <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
             {direction.formats.map((f, j) => (
               <span key={j} style={{ fontSize:9, color:C.coral, background:C.coral + "11", border:`1px solid ${C.coralDim}`, padding:"4px 10px" }}>{f}</span>
@@ -150,11 +150,11 @@ function PortalBlock({ hotel }) {
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, overflow:"hidden" }}>
       <div style={{ background:`linear-gradient(135deg, ${C.coral}12 0%, transparent 60%)`, padding:"40px 36px", borderBottom:`1px solid ${C.border}` }}>
-        <div style={{ fontSize:10, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:12, fontWeight:600 }}>Client Portal</div>
+        <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:12, fontWeight:600 }}>Client Portal</div>
         <h3 style={{ fontFamily:FONT, fontSize:"clamp(20px,2.5vw,28px)", fontWeight:600, color:C.white, marginBottom:12, lineHeight:1.2 }}>
           You will not just get content. You will get proof it is working.
         </h3>
-        <p style={{ fontSize:14, color:C.muted, lineHeight:1.8, maxWidth:560 }}>
+        <p style={{ fontSize:16, color:C.muted, lineHeight:1.8, maxWidth:560 }}>
           Every JMEDIA partnership includes access to a dedicated client portal that connects directly to your property management system and tracks direct booking impact over the life of our engagement.
         </p>
       </div>
@@ -165,15 +165,15 @@ function PortalBlock({ hotel }) {
           { num:"03", title:"Monthly Reporting", body:"Every month you get a performance summary showing what shipped, what performed, and what the numbers look like. You own the data and the decisions." },
         ].map((item, i) => (
           <div key={i} style={{ padding:"28px 24px", borderRight: i < 2 ? `1px solid ${C.border}` : "none" }}>
-            <div style={{ fontSize:10, color:C.coral, fontWeight:600, marginBottom:12 }}>{item.num}</div>
-            <div style={{ fontSize:15, fontWeight:600, color:C.white, marginBottom:10 }}>{item.title}</div>
-            <p style={{ fontSize:13, color:C.muted, lineHeight:1.75 }}>{item.body}</p>
+            <div style={{ fontSize:13, color:C.coral, fontWeight:600, marginBottom:12 }}>{item.num}</div>
+            <div style={{ fontSize:17, fontWeight:600, color:C.white, marginBottom:10 }}>{item.title}</div>
+            <p style={{ fontSize:15, color:C.muted, lineHeight:1.75 }}>{item.body}</p>
           </div>
         ))}
       </div>
       <div style={{ borderTop:`1px solid ${C.border}`, padding:"20px 36px", display:"flex", alignItems:"center", gap:16 }}>
         <div style={{ width:6, height:6, borderRadius:"50%", background:C.coral, flexShrink:0 }} />
-        <p style={{ fontSize:13, color:C.muted, lineHeight:1.7 }}>No other video production company in the independent hotel space offers PMS-connected performance tracking. This is the difference between a vendor and a partner.</p>
+        <p style={{ fontSize:15, color:C.muted, lineHeight:1.7 }}>No other video production company in the independent hotel space offers PMS-connected performance tracking. This is the difference between a vendor and a partner.</p>
       </div>
     </div>
   );
@@ -182,11 +182,11 @@ function PortalBlock({ hotel }) {
 function GateSection({ gated, onUngate, hotel }) {
   const inner = (
     <div style={{ textAlign:"center" }}>
-      <div style={{ fontSize:10, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:16, fontWeight:600 }}>Ready to see the full breakdown</div>
+      <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:16, fontWeight:600 }}>Ready to see the full breakdown</div>
       <p style={{ fontSize:"clamp(20px,3vw,28px)", fontWeight:300, color:C.white, marginBottom:12 }}>Book a 15-minute call to get the full PDF for {hotel}</p>
-      <p style={{ fontSize:13, color:C.muted, maxWidth:400, margin:"0 auto 32px", lineHeight:1.75 }}>No agenda. No pressure. I will send the PDF before we speak.</p>
+      <p style={{ fontSize:15, color:C.muted, maxWidth:400, margin:"0 auto 32px", lineHeight:1.75 }}>No agenda. No pressure. I will send the PDF before we speak.</p>
       <a href={CALENDAR_URL} target="_blank" rel="noopener noreferrer"
-        style={{ display:"inline-block", background:C.coral, color:"#fff", fontFamily:FONT, fontSize:11, letterSpacing:"0.12em", textTransform:"uppercase", padding:"16px 44px", textDecoration:"none", fontWeight:600 }}
+        style={{ display:"inline-block", background:C.coral, color:"#fff", fontFamily:FONT, fontSize:13, letterSpacing:"0.12em", textTransform:"uppercase", padding:"16px 44px", textDecoration:"none", fontWeight:600 }}
         onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
         onMouseLeave={e => e.currentTarget.style.opacity = "1"}>
         Book a Meeting to Download
@@ -202,7 +202,7 @@ function GateSection({ gated, onUngate, hotel }) {
       </div>
       <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", background:C.black + "E0", backdropFilter:"blur(4px)", padding:"64px 48px" }}>
         {inner}
-        <button onClick={onUngate} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:FONT, fontSize:10, color:C.muted, textDecoration:"underline", marginTop:20 }}>
+        <button onClick={onUngate} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:FONT, fontSize:13, color:C.muted, textDecoration:"underline", marginTop:20 }}>
           View without downloading
         </button>
       </div>
@@ -226,21 +226,21 @@ function GMView({ data, gated, onUngate }) {
       <nav style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"20px 48px", borderBottom:`1px solid ${C.border}`, background:C.black }}>
         <Logo height={48} />
         <div style={{ display:"flex", gap:20, alignItems:"center" }}>
-          <span style={{ fontFamily:FONT, fontSize:10, color:C.muted, letterSpacing:"0.1em" }}>General Manager Briefing</span>
+          <span style={{ fontFamily:FONT, fontSize:12, color:C.muted, letterSpacing:"0.1em" }}>General Manager Briefing</span>
           <div style={{ width:1, height:14, background:C.border }} />
-          <span style={{ fontFamily:FONT, fontSize:10, color:C.coral, letterSpacing:"0.1em" }}>{contact.company}</span>
+          <span style={{ fontFamily:FONT, fontSize:12, color:C.coral, letterSpacing:"0.1em" }}>{contact.company}</span>
         </div>
       </nav>
       <div style={{ position:"relative", minHeight:"60vh", display:"flex", flexDirection:"column", justifyContent:"center" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:heroImg ? `url(${heroImg})` : "url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1600&q=80')", backgroundSize:"cover", backgroundPosition:"center", filter:"brightness(0.12) saturate(0.3)" }} />
         <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${C.black}00 0%, ${C.black}CC 60%, ${C.black} 100%)` }} />
         <div ref={heroRef} style={{ ...heroStyle, position:"relative", padding:"80px 48px", maxWidth:860 }}>
-          <div style={{ fontFamily:FONT, fontSize:10, color:C.coral, letterSpacing:"0.14em", textTransform:"uppercase", marginBottom:20, fontWeight:600 }}>Prepared exclusively for {contact.company}</div>
+          <div style={{ fontFamily:FONT, fontSize:13, color:C.coral, letterSpacing:"0.14em", textTransform:"uppercase", marginBottom:20, fontWeight:600 }}>Prepared exclusively for {contact.company}</div>
           <h1 style={{ fontFamily:FONT, fontSize:"clamp(32px,5vw,60px)", fontWeight:700, lineHeight:1.1, color:C.white, marginBottom:24, letterSpacing:"-0.02em" }}>{concept.headline}</h1>
-          <p style={{ fontSize:16, color:C.muted, lineHeight:1.85, maxWidth:560, marginBottom:32 }}>{concept.opening}</p>
+          <p style={{ fontSize:18, color:C.muted, lineHeight:1.85, maxWidth:560, marginBottom:32 }}>{concept.opening}</p>
           {contact.jmedia_outreach_hook && (
             <div style={{ background:C.coral + "12", border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"16px 20px", maxWidth:560 }}>
-              <p style={{ fontSize:13, color:C.white, lineHeight:1.75 }}>{contact.jmedia_outreach_hook}</p>
+              <p style={{ fontSize:15, color:C.white, lineHeight:1.75 }}>{contact.jmedia_outreach_hook}</p>
             </div>
           )}
         </div>
@@ -260,7 +260,7 @@ function GMView({ data, gated, onUngate }) {
       <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
         <div ref={dirRef} style={{ ...dirStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>What this looks like for {contact.company}</SectionLabel>
-          <p style={{ fontSize:14, color:C.muted, lineHeight:1.8, maxWidth:600, marginBottom:28 }}>Three content directions specific to your property, each designed to move guests from discovery to direct booking.</p>
+          <p style={{ fontSize:16, color:C.muted, lineHeight:1.8, maxWidth:600, marginBottom:28 }}>Three content directions specific to your property, each designed to move guests from discovery to direct booking.</p>
           <div style={{ display:"flex", flexDirection:"column", gap:2 }}>
             {concept.content_directions.map((dir, i) => (
               <DirectionCard key={i} index={i} direction={dir} />
@@ -281,7 +281,7 @@ function GMView({ data, gated, onUngate }) {
       </div>
       <footer style={{ borderTop:`1px solid ${C.border}`, padding:"24px 48px", display:"flex", justifyContent:"space-between", alignItems:"center", background:C.black }}>
         <Logo height={28} />
-        <span style={{ fontFamily:FONT, fontSize:10, color:C.muted }}>{contact.company} / {new Date().getFullYear()}</span>
+        <span style={{ fontFamily:FONT, fontSize:13, color:C.muted }}>{contact.company} / {new Date().getFullYear()}</span>
       </footer>
     </div>
   );
@@ -343,7 +343,7 @@ function GMPage() {
           <div style={{ display:"flex", gap:8 }}>
             {[0,1,2].map(i => <div key={i} style={{ width:5, height:5, borderRadius:"50%", background:"#E8625A", animation:`pulse 1.2s ease ${i*0.2}s infinite` }} />)}
           </div>
-          <p style={{ fontFamily:"'Inter', system-ui, sans-serif", fontSize:11, color:"#666666", letterSpacing:"0.12em" }}>Building your revenue briefing</p>
+          <p style={{ fontFamily:"'Inter', system-ui, sans-serif", fontSize:14, color:"#666666", letterSpacing:"0.12em" }}>Building your revenue briefing</p>
         </div>
       )}
       {state === "error" && (
