@@ -25,7 +25,7 @@ async function fetchContact(contactId) {
   const props = [
     "firstname", "lastname", "company", "website", "city", "state",
     "message", "jmedia_track", "jmedia_brand_identity", "jmedia_key_detail",
-    "jmedia_concept",
+    "jmedia_concept", "jmedia_outreach_hook", "jmedia_guest_profile",
   ].join(",");
   const res = await fetch(
     `${HS_BASE}/crm/v3/objects/contacts/${contactId}?properties=${props}`,
@@ -33,7 +33,8 @@ async function fetchContact(contactId) {
   );
   if (!res.ok) throw new Error("Contact not found");
   const data = await res.json();
-  return data.properties;
+  // Attach the HubSpot record ID so the page can use it for tracking
+  return { ...data.properties, hs_object_id: data.id };
 }
 
 async function generateConceptLive(contact, scoring) {
@@ -125,7 +126,6 @@ export default async function handler(req, res) {
 
     const scoring = parseMessage(contact.message);
 
-    // Use pre-generated concept if available — fallback to live generation
     let concept;
     if (contact.jmedia_concept) {
       try {
@@ -144,7 +144,6 @@ export default async function handler(req, res) {
       concept = await generateConceptLive(contact, scoring);
     }
 
-    // No image fetching here — images load separately client-side for instant page render
     return res.status(200).json({ contact, scoring, concept });
   } catch (err) {
     return res.status(500).json({ error: err.message });
