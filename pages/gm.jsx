@@ -32,10 +32,11 @@ function SectionLabel({ children }) {
   );
 }
 
-function ROICalculator({ hotel }) {
+function ROICalculator({ hotel, contactId }) {
   const [revenue, setRevenue] = useState(5000000);
   const [otaPct, setOtaPct] = useState(40);
   const [commission, setCommission] = useState(23);
+  const debounceRef = useRef(null);
   const annualOTACost = Math.round(revenue * (otaPct / 100) * (commission / 100));
   const shift10 = Math.round(revenue * 0.10 * (commission / 100));
   const shift15 = Math.round(revenue * 0.15 * (commission / 100));
@@ -43,15 +44,27 @@ function ROICalculator({ hotel }) {
   const payback = Math.round((4500 * 12 / shift15) * 12);
   const fmt = (n) => "$" + n.toLocaleString();
 
+  const track = (r, o, c) => {
+    if (!contactId) return;
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      fetch("/api/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contactId, revenue: r, otaPct: o, commission: c }),
+      }).catch(() => {});
+    }, 2000);
+  };
+
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
       <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:8, fontWeight:600 }}>ROI Calculator</div>
       <p style={{ fontSize:16, color:C.muted, marginBottom:32, lineHeight:1.7 }}>Adjust the numbers to see what a shift to direct bookings means for {hotel}.</p>
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:24, marginBottom:40 }}>
         {[
-          { label:"Annual Room Revenue", value:revenue, setter:setRevenue, min:500000, max:50000000, step:250000, fmt:true },
-          { label:"OTA Booking %", value:otaPct, setter:setOtaPct, min:5, max:80, step:1, suffix:"%" },
-          { label:"Avg OTA Commission", value:commission, setter:setCommission, min:15, max:30, step:1, suffix:"%" },
+          { label:"Annual Room Revenue", value:revenue, setter:(v) => { setRevenue(v); track(v, otaPct, commission); }, min:500000, max:50000000, step:250000, fmt:true },
+          { label:"OTA Booking %", value:otaPct, setter:(v) => { setOtaPct(v); track(revenue, v, commission); }, min:5, max:80, step:1, suffix:"%" },
+          { label:"Avg OTA Commission", value:commission, setter:(v) => { setCommission(v); track(revenue, otaPct, v); }, min:15, max:30, step:1, suffix:"%" },
         ].map((s, i) => (
           <div key={i}>
             <div style={{ fontSize:13, color:C.muted, marginBottom:8, fontWeight:600 }}>{s.label}</div>
@@ -248,7 +261,7 @@ function GMView({ data, gated, onUngate }) {
       <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
         <div ref={calcRef} style={{ ...calcStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>The OTA Math for {contact.company}</SectionLabel>
-          <ROICalculator hotel={contact.company} />
+          <ROICalculator hotel={contact.company} contactId={contact.hs_object_id} />
         </div>
       </div>
       <div style={{ padding:"80px 48px" }}>
