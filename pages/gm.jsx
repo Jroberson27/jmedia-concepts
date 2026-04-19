@@ -101,7 +101,7 @@ function ROICalculator({ hotel, contactId }) {
         </div>
         <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"16px 20px" }}>
           <div style={{ fontSize:15, color:C.white, lineHeight:1.75 }}>
-            At a 15% direct booking shift over 6 months, {hotel} would generate <span style={{ color:C.coral, fontWeight:600 }}>{fmt(shift15Over6Mo)}</span> in recovered OTA commissions against a total retainer of <span style={{ color:C.coral, fontWeight:600 }}>{fmt(retainerTotal6Mo)}</span> — a net gain of <span style={{ color:C.coral, fontWeight:600 }}>{fmt(Math.max(0, netGain6Mo))}</span>.
+            At a 15% direct booking shift, {hotel} would recover <span style={{ color:C.coral, fontWeight:600 }}>{fmt(shift15Over6Mo)}</span> in OTA commissions over the first 6 months alone.
           </div>
         </div>
       </div>
