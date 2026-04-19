@@ -5,11 +5,17 @@ export default async function handler(req, res) {
   if (!contactId) return res.status(400).json({ error: "No contact ID" });
 
   const HUBSPOT_TOKEN = process.env.HUBSPOT_API_KEY;
+
+  const annualOTASpend = Math.round(revenue * (otaPct / 100) * (commission / 100));
+  const shift15 = Math.round(revenue * 0.15 * (commission / 100));
+
   const props = {
-    jmedia_roi_revenue: String(revenue),
-    jmedia_roi_ota_pct: String(otaPct),
-    jmedia_roi_commission: String(commission),
-    jmedia_roi_viewed_at: new Date().toISOString(),
+    jmedia_roi_revenue:          String(revenue),
+    jmedia_roi_ota_pct:          String(otaPct),
+    jmedia_roi_commission:       String(commission),
+    jmedia_roi_viewed_at:        new Date().toISOString(),
+    jmedia_roi_annual_ota_spend: String(annualOTASpend),
+    jmedia_roi_shift_15:         String(shift15),
   };
 
   try {
