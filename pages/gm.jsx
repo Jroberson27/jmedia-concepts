@@ -41,7 +41,10 @@ function ROICalculator({ hotel, contactId }) {
   const shift10 = Math.round(revenue * 0.10 * (commission / 100));
   const shift15 = Math.round(revenue * 0.15 * (commission / 100));
   const shift20 = Math.round(revenue * 0.20 * (commission / 100));
-  const payback = Math.round((4500 * 12 / shift15) * 12);
+  const retainerMonthly = 4500;
+  const retainerTotal6Mo = retainerMonthly * 6;
+  const shift15Over6Mo = Math.round(shift15 / 2);
+  const netGain6Mo = shift15Over6Mo - retainerTotal6Mo;
   const fmt = (n) => "$" + n.toLocaleString();
 
   const track = (r, o, c) => {
@@ -98,7 +101,7 @@ function ROICalculator({ hotel, contactId }) {
         </div>
         <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"16px 20px" }}>
           <div style={{ fontSize:15, color:C.white, lineHeight:1.75 }}>
-            At a 15% direct booking shift, {hotel} recovers the full retainer cost in approximately <span style={{ color:C.coral, fontWeight:600 }}>{payback} months</span>.
+            At a 15% direct booking shift over 6 months, {hotel} would generate <span style={{ color:C.coral, fontWeight:600 }}>{fmt(shift15Over6Mo)}</span> in recovered OTA commissions against a total retainer of <span style={{ color:C.coral, fontWeight:600 }}>{fmt(retainerTotal6Mo)}</span> — a net gain of <span style={{ color:C.coral, fontWeight:600 }}>{fmt(Math.max(0, netGain6Mo))}</span>.
           </div>
         </div>
       </div>
