@@ -38,9 +38,9 @@ function ROICalculator({ hotel, contactId }) {
   const [commission, setCommission] = useState(23);
   const debounceRef = useRef(null);
   const annualOTACost = Math.round(revenue * (otaPct / 100) * (commission / 100));
-  const shift10 = Math.round(revenue * 0.10 * (commission / 100));
-  const shift15 = Math.round(revenue * 0.15 * (commission / 100));
-  const shift20 = Math.round(revenue * 0.20 * (commission / 100));
+  const shift10 = Math.round(revenue * (otaPct / 100) * 0.10 * (commission / 100));
+  const shift15 = Math.round(revenue * (otaPct / 100) * 0.15 * (commission / 100));
+  const shift20 = Math.round(revenue * (otaPct / 100) * 0.20 * (commission / 100));
   const retainerMonthly = 4500;
   const retainerTotal6Mo = retainerMonthly * 6;
   const shift15Over6Mo = Math.round(shift15 / 2);
