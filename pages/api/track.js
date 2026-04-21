@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
   // Core calculations
   const annualOTASpend = Math.round(revenue * (otaPct / 100) * (commission / 100));
-  const shift15        = Math.round(revenue * 0.15 * (commission / 100));
+  const shift15        = Math.round(revenue * (otaPct / 100) * 0.15 * (commission / 100));
   const monthlyShift15 = shift15 / 12;
 
   // Dynamic pricing multiplier based on revenue size
