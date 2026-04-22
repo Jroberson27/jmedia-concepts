@@ -1,21 +1,25 @@
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { contactId, revenue, otaPct } = req.body;
+  const { contactId, revenue, otaPct, commission } = req.body;
   if (!contactId) return res.status(400).json({ error: "No contact ID" });
 
   const HUBSPOT_TOKEN = process.env.HUBSPOT_API_KEY;
 
-  // Incremental revenue model
-  // Annual OTA pool = revenue × OTA%
-  // Shift 15 = revenue × OTA% × 15%
-  // 6-month = shift15 / 2
+  // Net incremental revenue model
+  // Annual OTA pool  = revenue × OTA%
+  // Net shift 15     = revenue × OTA% × 15% × (1 - commission%)
+  // 6-month          = shift15 / 2
+  // Retainer         = (shift15 / 12) × multiplier | floor $2,500 | ceiling $8,500
   const annualOTAPool = Math.round(revenue * (otaPct / 100));
-  const shift15       = Math.round(revenue * (otaPct / 100) * 0.15);
+  const netFactor     = 1 - (commission / 100);
+  const shift15       = Math.round(revenue * (otaPct / 100) * 0.15 * netFactor);
   const shift15_6mo   = Math.round(shift15 / 2);
 
-  // Dynamic retainer: (shift15 / 12) × multiplier by revenue size
-  // Floor $2,500 | Ceiling $8,500
+  // Verify: $3,250,000 × 19% × 15% × 79% = $73,174 ✓
+  // Verify: $3,500,000 × 30% × 15% × 76% = $119,700 ✓
+  // Verify: $3,000,000 × 28% × 15% × 80% = $100,800 ✓
+
   let multiplier;
   if (revenue < 2000000)       multiplier = 0.30;
   else if (revenue < 5000000)  multiplier = 0.35;
@@ -35,6 +39,7 @@ export default async function handler(req, res) {
   const props = {
     jmedia_roi_revenue:          String(revenue),
     jmedia_roi_ota_pct:          String(otaPct),
+    jmedia_roi_commission:       String(commission),
     jmedia_roi_viewed_at:        new Date().toISOString(),
     jmedia_roi_annual_ota_spend: String(annualOTAPool),
     jmedia_roi_shift_15:         String(shift15),
