@@ -138,7 +138,7 @@ function ProofBlock() {
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"32px 28px" }}>
         <div style={{ fontSize:12, color:C.muted, letterSpacing:"0.1em", marginBottom:16, fontWeight:600 }}>Industry Validation</div>
         <p style={{ fontSize:16, color:C.white, lineHeight:1.85, marginBottom:20 }}>
-          Lowe's Hotels launched a dedicated YouTube channel to syndicate the Checked In series after seeing its direct booking impact on Universal Orlando.
+          Loews Hotels launched a dedicated YouTube channel to syndicate the Checked In series after seeing its direct booking impact on Universal Orlando.
         </p>
         <p style={{ fontSize:15, color:C.muted, lineHeight:1.8 }}>
           When a branded hotel group builds a distribution channel around your content model, that is proof of concept at scale. That same approach is what I bring to independent properties.
