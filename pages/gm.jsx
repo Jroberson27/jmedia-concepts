@@ -108,7 +108,7 @@ function ROICalculator({ hotel, contactId }) {
         <div style={{ background:C.black, border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"20px 24px", marginBottom:8 }}>
           <div style={{ fontSize:13, color:C.muted, marginBottom:4, letterSpacing:"0.06em", textTransform:"uppercase" }}>Annual booking revenue flowing through OTAs</div>
           <div style={{ fontSize:40, fontWeight:300, color:C.coral, marginBottom:6 }}>{fmt(annualOTAPool)}</div>
-          <div style={{ fontSize:13, color:C.muted, lineHeight:1.6 }}>This is the portion of {hotel}'s annual room revenue being booked through OTA channels. Every booking in this pool is a guest who found you on Expedia or Booking.com instead of your own site. You paid {commission}% for the privilege.</div>
+          <div style={{ fontSize:13, color:C.body, lineHeight:1.6 }}>This is the portion of {hotel}'s annual room revenue being booked through OTA channels. Every booking in this pool is a guest who found you on Expedia or Booking.com instead of your own site. You paid {commission}% for the privilege.</div>
         </div>
         <div style={{ fontSize:13, color:C.muted, marginBottom:16, marginTop:24, letterSpacing:"0.06em", textTransform:"uppercase" }}>Net revenue recovered by shifting bookings to direct</div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:8 }}>
@@ -125,7 +125,7 @@ function ROICalculator({ hotel, contactId }) {
             </div>
           ))}
         </div>
-        <div style={{ fontSize:12, color:C.muted, marginBottom:24, lineHeight:1.6 }}>
+        <div style={{ fontSize:13, color:C.body, marginBottom:24, lineHeight:1.6 }}>
           These figures show the net revenue {hotel} keeps by capturing those bookings directly. The OTA commission that would have been paid is removed. The guest is the same guest. The difference is who captures the margin.
         </div>
         <div style={{ background:C.black, border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"20px 24px" }}>
@@ -194,7 +194,7 @@ function VideoInfographic() {
             <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral, opacity:0.4 }} />
             <div style={{ fontSize:44, fontWeight:300, color:C.coral, lineHeight:1, marginBottom:10 }}>{item.stat}</div>
             <div style={{ fontSize:14, color:C.white, fontWeight:600, lineHeight:1.4, marginBottom:10 }}>{item.label}</div>
-            <div style={{ fontSize:13, color:C.muted, lineHeight:1.7 }}>{item.sub}</div>
+            <div style={{ fontSize:13, color:C.body, lineHeight:1.7 }}>{item.sub}</div>
           </div>
         ))}
       </div>
@@ -208,7 +208,7 @@ function VideoInfographic() {
             <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral, opacity:0.4 }} />
             <div style={{ fontSize:44, fontWeight:300, color:C.coral, lineHeight:1, marginBottom:10 }}>{item.stat}</div>
             <div style={{ fontSize:14, color:C.white, fontWeight:600, lineHeight:1.4, marginBottom:10 }}>{item.label}</div>
-            <div style={{ fontSize:13, color:C.muted, lineHeight:1.7 }}>{item.sub}</div>
+            <div style={{ fontSize:13, color:C.body, lineHeight:1.7 }}>{item.sub}</div>
           </div>
         ))}
       </div>
@@ -227,7 +227,7 @@ function VideoInfographic() {
               <div style={{ flex:1, padding:"16px 12px", borderLeft:`1px solid ${C.border}`, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}`, borderRight: i === 4 ? `1px solid ${C.border}` : "none", background: i === 4 ? C.coral + "10" : "transparent" }}>
                 <div style={{ fontSize:11, color:C.coral, fontWeight:600, marginBottom:8 }}>{item.step}</div>
                 <div style={{ fontSize:13, color:C.white, fontWeight:600, lineHeight:1.4, marginBottom:6 }}>{item.label}</div>
-                <div style={{ fontSize:11, color:C.muted, lineHeight:1.5 }}>{item.sub}</div>
+                <div style={{ fontSize:11, color:C.body, lineHeight:1.5 }}>{item.sub}</div>
               </div>
               {i < 4 && <div style={{ width:20, display:"flex", alignItems:"center", justifyContent:"center", color:C.coral, fontSize:14, flexShrink:0 }}>→</div>}
             </div>
@@ -292,14 +292,14 @@ function MechanismSection() {
             <div style={{ flex:1, padding:"20px 14px", background: i === 4 ? C.coral+"15" : C.black, border:`1px solid ${i === 4 ? C.coralDim : C.border}`, borderRight: i < 4 ? "none" : `1px solid ${i === 4 ? C.coralDim : C.border}` }}>
               <div style={{ fontSize:11, color:C.coral, fontWeight:600, marginBottom:10 }}>{item.step}</div>
               <div style={{ fontSize:13, color:C.white, fontWeight:600, lineHeight:1.4, marginBottom:8 }}>{item.label}</div>
-              <div style={{ fontSize:12, color:C.muted, lineHeight:1.6 }}>{item.sub}</div>
+              <div style={{ fontSize:12, color:C.body, lineHeight:1.6 }}>{item.sub}</div>
             </div>
             {i < 4 && <div style={{ width:16, display:"flex", alignItems:"center", justifyContent:"center", color:C.coral, fontSize:12, flexShrink:0 }}>→</div>}
           </div>
         ))}
       </div>
       <div style={{ background:C.black, borderLeft:`3px solid ${C.coral}`, padding:"16px 20px" }}>
-        <p style={{ fontSize:15, color:C.white, lineHeight:1.75 }}>
+        <p style={{ fontSize:15, color:C.body, lineHeight:1.75 }}>
           The inspiration phase has migrated almost entirely to visual platforms. TikTok and Instagram are where booking intent is formed. Not search engines. What your property looks like on those platforms is not a branding decision. <span style={{ color:C.coral, fontWeight:600 }}>It is a revenue decision.</span>
         </p>
       </div>
@@ -462,14 +462,11 @@ function GMView({ data, gated, onUngate }) {
         </div>
       </div>
 
-      {/* 2. THE PROBLEM + ROI CALCULATOR */}
+      {/* 2. THE PROBLEM */}
       <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
         <div style={{ maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>The real problem</SectionLabel>
           <ProblemSection hotel={contact.company} />
-          <div style={{ marginTop:2 }}>
-            <ROICalculator hotel={contact.company} contactId={contact.hs_object_id} />
-          </div>
         </div>
       </div>
 
@@ -481,8 +478,16 @@ function GMView({ data, gated, onUngate }) {
         </div>
       </div>
 
-      {/* 4. THE DATA */}
+      {/* 4. ROI CALCULATOR */}
       <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
+        <div style={{ maxWidth:860, margin:"0 auto" }}>
+          <SectionLabel>The OTA math for {contact.company}</SectionLabel>
+          <ROICalculator hotel={contact.company} contactId={contact.hs_object_id} />
+        </div>
+      </div>
+
+      {/* 5. THE DATA */}
+      <div style={{ padding:"80px 48px" }}>
         <div style={{ maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>This is not aesthetic. This is commercial.</SectionLabel>
           <VideoInfographic />
@@ -494,7 +499,7 @@ function GMView({ data, gated, onUngate }) {
         <div ref={dirRef} style={{ ...dirStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>What we produce for {contact.company}</SectionLabel>
           <p style={{ fontSize:16, color:C.body, lineHeight:1.8, maxWidth:600, marginBottom:8 }}>Month-to-month. Specifically. What gets filmed, what gets delivered, where it lives, and how often. Three content directions built for your property.</p>
-          <div style={{ fontSize:13, color:C.muted, marginBottom:28, lineHeight:1.7 }}>Each direction is a Signature Storyline. A recurring content format designed to build guest trust over time, not just produce one-off assets.</div>
+          <div style={{ fontSize:13, color:C.body, marginBottom:28, lineHeight:1.7 }}>Each direction is a Signature Storyline. A recurring content format designed to build guest trust over time, not just produce one-off assets.</div>
           <div style={{ display:"flex", flexDirection:"column", gap:2 }}>
             {concept.content_directions.map((dir, i) => (
               <DirectionCard key={i} index={i} direction={dir} />
