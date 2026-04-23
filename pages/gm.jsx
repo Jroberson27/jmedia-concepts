@@ -221,6 +221,93 @@ function VideoInfographic() {
   );
 }
 
+function ProblemSection({ hotel }) {
+  return (
+    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2 }}>
+      <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px", borderTop:`2px solid ${C.coral}` }}>
+        <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600, marginBottom:20 }}>The reality</div>
+        <h3 style={{ fontFamily:FONT, fontSize:"clamp(18px,2vw,24px)", fontWeight:600, color:C.white, lineHeight:1.3, marginBottom:16 }}>
+          Guests are already finding {hotel}. The question is what they see when they do.
+        </h3>
+        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85 }}>
+          Today a guest discovers your property on Booking.com, compares it on Google, checks your Instagram, and only then decides whether to book direct or return to the OTA. The OTA is not the problem. The gap in your visual story is.
+        </p>
+      </div>
+      <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
+        <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600, marginBottom:20 }}>What drives the decision</div>
+        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, marginBottom:20 }}>
+          Price still matters. But trust now plays a bigger role in the final booking decision. Guests are more cautious and more informed than ever. Even a competitive rate loses if the property does not feel worth the risk of booking outside an OTA.
+        </p>
+        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85 }}>
+          Trust is built visually — before a guest ever speaks to your staff, reads a review, or picks up the phone.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function MechanismSection() {
+  return (
+    <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
+      <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600, marginBottom:12 }}>The missing piece</div>
+      <h3 style={{ fontFamily:FONT, fontSize:"clamp(18px,2vw,24px)", fontWeight:600, color:C.white, lineHeight:1.3, marginBottom:12 }}>
+        Video is not the replacement for OTA dependency. It is the trust infrastructure that makes direct worth choosing.
+      </h3>
+      <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, marginBottom:36 }}>
+        The path to a direct booking is no longer linear. Here is how it actually works — and where cinematic content changes the outcome.
+      </p>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:0, marginBottom:28 }}>
+        {[
+          { step:"01", label:"Discovery", sub:"Guest finds you on Booking.com, Google, or social media" },
+          { step:"02", label:"Evaluation", sub:"They land on your website or Instagram to learn more" },
+          { step:"03", label:"Trust signal", sub:"Cinematic content communicates brand quality and perceived value" },
+          { step:"04", label:"Conversion", sub:"Guest books direct — your property feels worth it without the OTA safety net" },
+          { step:"05", label:"Full revenue", sub:"You capture the booking without paying OTA commission" },
+        ].map((item, i) => (
+          <div key={i} style={{ display:"flex", alignItems:"stretch" }}>
+            <div style={{ flex:1, padding:"20px 14px", background: i === 4 ? C.coral+"15" : C.black, border:`1px solid ${i === 4 ? C.coralDim : C.border}`, borderRight: i < 4 ? "none" : `1px solid ${i === 4 ? C.coralDim : C.border}` }}>
+              <div style={{ fontSize:11, color:C.coral, fontWeight:600, marginBottom:10 }}>{item.step}</div>
+              <div style={{ fontSize:13, color:C.white, fontWeight:600, lineHeight:1.4, marginBottom:8 }}>{item.label}</div>
+              <div style={{ fontSize:12, color:C.muted, lineHeight:1.6 }}>{item.sub}</div>
+            </div>
+            {i < 4 && <div style={{ width:16, display:"flex", alignItems:"center", justifyContent:"center", color:C.coral, fontSize:12, flexShrink:0 }}>→</div>}
+          </div>
+        ))}
+      </div>
+      <div style={{ background:C.black, borderLeft:`3px solid ${C.coral}`, padding:"16px 20px" }}>
+        <p style={{ fontSize:15, color:C.white, lineHeight:1.75 }}>
+          The inspiration phase has migrated almost entirely to visual platforms. TikTok and Instagram are where booking intent is formed — not search engines. What your property looks like on those platforms is not a branding decision. <span style={{ color:C.coral, fontWeight:600 }}>It is a revenue decision.</span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function IndependentHotelsSection() {
+  return (
+    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2 }}>
+      <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px", borderTop:`2px solid ${C.coral}` }}>
+        <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600, marginBottom:20 }}>The branded hotel advantage</div>
+        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, marginBottom:16 }}>
+          Marriott, Hilton, and Hyatt have loyalty programs, global name recognition, and decades of brand equity doing the trust-building before a guest ever sees their content.
+        </p>
+        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85 }}>
+          A guest books a Marriott partly because they know what a Marriott feels like. That familiarity is the trust signal. It is built into the brand.
+        </p>
+      </div>
+      <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
+        <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600, marginBottom:20 }}>Your competitive advantage</div>
+        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, marginBottom:16 }}>
+          Independent hotels do not have that badge. What they have is character, specificity, and a story that no Marriott can tell. Cinematic content is how an independent property competes on perceived value — and wins.
+        </p>
+        <p style={{ fontSize:15, color:C.white, lineHeight:1.85, fontWeight:500 }}>
+          The guest who books your property direct is not settling. They are choosing. Content is what makes that choice feel obvious.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function DirectionCard({ index, direction }) {
   const [open, setOpen] = useState(index === 0);
   return (
@@ -314,7 +401,6 @@ function GMView({ data, gated, onUngate }) {
   const { contact, concept, propertyImages = [] } = data;
   const heroImg = propertyImages[0] || null;
   const [heroRef, heroStyle] = useFadeUp(0);
-  const [calcRef, calcStyle] = useFadeUp(0);
   const [proofRef, proofStyle] = useFadeUp(0);
   const [dirRef, dirStyle] = useFadeUp(0);
   const [portalRef, portalStyle] = useFadeUp(0);
@@ -331,6 +417,7 @@ function GMView({ data, gated, onUngate }) {
           <span style={{ fontFamily:FONT, fontSize:12, color:C.coral, letterSpacing:"0.1em" }}>{contact.company}</span>
         </div>
       </nav>
+      {/* 1. HERO */}
       <div style={{ position:"relative", minHeight:"60vh", display:"flex", flexDirection:"column", justifyContent:"center" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:heroImg ? `url(${heroImg})` : "url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1600&q=80')", backgroundSize:"cover", backgroundPosition:"center", filter:"brightness(0.12) saturate(0.3)" }} />
         <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${C.black}00 0%, ${C.black}CC 60%, ${C.black} 100%)` }} />
@@ -345,28 +432,40 @@ function GMView({ data, gated, onUngate }) {
           )}
         </div>
       </div>
-      <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
-        <div ref={calcRef} style={{ ...calcStyle, maxWidth:860, margin:"0 auto" }}>
-          <SectionLabel>The OTA Math for {contact.company}</SectionLabel>
-          <ROICalculator hotel={contact.company} contactId={contact.hs_object_id} />
-        </div>
-      </div>
-      <div style={{ padding:"80px 48px" }}>
-        <div ref={proofRef} style={{ ...proofStyle, maxWidth:860, margin:"0 auto" }}>
-          <SectionLabel>Proven at scale</SectionLabel>
-          <ProofBlock />
-        </div>
-      </div>
+
+      {/* 2. THE PROBLEM + ROI CALCULATOR */}
       <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
         <div style={{ maxWidth:860, margin:"0 auto" }}>
-          <SectionLabel>Why video moves the booking</SectionLabel>
+          <SectionLabel>The real problem</SectionLabel>
+          <ProblemSection hotel={contact.company} />
+          <div style={{ marginTop:2 }}>
+            <ROICalculator hotel={contact.company} contactId={contact.hs_object_id} />
+          </div>
+        </div>
+      </div>
+
+      {/* 3. THE MECHANISM */}
+      <div style={{ padding:"80px 48px" }}>
+        <div style={{ maxWidth:860, margin:"0 auto" }}>
+          <SectionLabel>How direct bookings actually happen</SectionLabel>
+          <MechanismSection />
+        </div>
+      </div>
+
+      {/* 4. THE DATA */}
+      <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
+        <div style={{ maxWidth:860, margin:"0 auto" }}>
+          <SectionLabel>This is not aesthetic. This is commercial.</SectionLabel>
           <VideoInfographic />
         </div>
       </div>
-      <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
+
+      {/* 5. WHAT JMEDIA DELIVERS */}
+      <div style={{ padding:"80px 48px" }}>
         <div ref={dirRef} style={{ ...dirStyle, maxWidth:860, margin:"0 auto" }}>
-          <SectionLabel>What this looks like for {contact.company}</SectionLabel>
-          <p style={{ fontSize:16, color:C.muted, lineHeight:1.8, maxWidth:600, marginBottom:28 }}>Three content directions specific to your property, each designed to move guests from discovery to direct booking.</p>
+          <SectionLabel>What we produce for {contact.company}</SectionLabel>
+          <p style={{ fontSize:16, color:C.muted, lineHeight:1.8, maxWidth:600, marginBottom:8 }}>Month-to-month. Specifically. What gets filmed, what gets delivered, where it lives, and how often. Three content directions built for your property.</p>
+          <div style={{ fontSize:13, color:C.muted, marginBottom:28, lineHeight:1.7 }}>Each direction is a Signature Storyline — a recurring content format designed to build guest trust over time, not just produce one-off assets.</div>
           <div style={{ display:"flex", flexDirection:"column", gap:2 }}>
             {concept.content_directions.map((dir, i) => (
               <DirectionCard key={i} index={i} direction={dir} />
@@ -374,12 +473,32 @@ function GMView({ data, gated, onUngate }) {
           </div>
         </div>
       </div>
+
+      {/* 6. WHY INDEPENDENT HOTELS */}
+      <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
+        <div style={{ maxWidth:860, margin:"0 auto" }}>
+          <SectionLabel>Why this matters more for independent hotels</SectionLabel>
+          <IndependentHotelsSection />
+        </div>
+      </div>
+
+      {/* 7. CREDIBILITY ANCHOR */}
       <div style={{ padding:"80px 48px" }}>
+        <div ref={proofRef} style={{ ...proofStyle, maxWidth:860, margin:"0 auto" }}>
+          <SectionLabel>Proven at scale</SectionLabel>
+          <ProofBlock />
+        </div>
+      </div>
+
+      {/* 8. PORTAL */}
+      <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
         <div ref={portalRef} style={{ ...portalStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>How you track results</SectionLabel>
           <PortalBlock hotel={contact.company} />
         </div>
       </div>
+
+      {/* 9. CTA */}
       <div style={{ padding:"0 48px 100px" }}>
         <div ref={gateRef} style={{ ...gateStyle, maxWidth:860, margin:"0 auto" }}>
           <GateSection gated={gated} onUngate={onUngate} hotel={contact.company} />
