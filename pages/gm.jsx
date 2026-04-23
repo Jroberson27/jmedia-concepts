@@ -3,10 +3,27 @@ import dynamic from "next/dynamic";
 
 const CALENDAR_URL = "https://meetings.hubspot.com/officialjordan-roberson2/jmedia-intro";
 const FONT = "'Inter', system-ui, sans-serif";
-const C = {
+
+const DARK = {
   black:"#0A0A0A", dark:"#0F0F0F", card:"#141414", border:"#1E1E1E",
-  coral:"#E8625A", coralDim:"#5A1E1A", white:"#F4F2EE", muted:"#666666", dim:"#2A2A2A"
+  coral:"#E8625A", coralDim:"#5A1E1A", white:"#F4F2EE", muted:"#888888", dim:"#2A2A2A"
 };
+const LIGHT = {
+  black:"#FFFFFF", dark:"#F5F4F1", card:"#FAFAF8", border:"#E2E0D8",
+  coral:"#C94B43", coralDim:"#F5D0CE", white:"#111111", muted:"#666666", dim:"#E8E6E0"
+};
+
+function useColorScheme() {
+  const [dark, setDark] = useState(true);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    setDark(mq.matches);
+    const handler = (e) => setDark(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return dark ? DARK : LIGHT;
+}
 
 function useFadeUp(delay) {
   const ref = useRef(null);
@@ -20,10 +37,12 @@ function useFadeUp(delay) {
 }
 
 function Logo({ height=44 }) {
+  const C = useColorScheme();
   return <img src="/jmedia-logo.png" alt="JMEDIA" style={{ height, mixBlendMode:"screen" }} />;
 }
 
 function SectionLabel({ children }) {
+  const C = useColorScheme();
   return (
     <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:32 }}>
       <div style={{ width:20, height:1, background:C.coral }} />
@@ -33,6 +52,7 @@ function SectionLabel({ children }) {
 }
 
 function ROICalculator({ hotel, contactId }) {
+  const C = useColorScheme();
   const [revenue, setRevenue] = useState(5000000);
   const [otaPct, setOtaPct] = useState(40);
   const [commission, setCommission] = useState(23);
@@ -88,7 +108,7 @@ function ROICalculator({ hotel, contactId }) {
         <div style={{ background:C.black, border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"20px 24px", marginBottom:8 }}>
           <div style={{ fontSize:13, color:C.muted, marginBottom:4, letterSpacing:"0.06em", textTransform:"uppercase" }}>Annual booking revenue flowing through OTAs</div>
           <div style={{ fontSize:40, fontWeight:300, color:C.coral, marginBottom:6 }}>{fmt(annualOTAPool)}</div>
-          <div style={{ fontSize:13, color:C.muted, lineHeight:1.6 }}>This is the portion of {hotel}'s annual room revenue being booked through OTA channels. Every booking in this pool is a guest who found you on Expedia or Booking.com instead of your own site — and you paid {commission}% for the privilege.</div>
+          <div style={{ fontSize:13, color:C.muted, lineHeight:1.6 }}>This is the portion of {hotel}'s annual room revenue being booked through OTA channels. Every booking in this pool is a guest who found you on Expedia or Booking.com instead of your own site. You paid {commission}% for the privilege.</div>
         </div>
         <div style={{ fontSize:13, color:C.muted, marginBottom:16, marginTop:24, letterSpacing:"0.06em", textTransform:"uppercase" }}>Net revenue recovered by shifting bookings to direct</div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:8 }}>
@@ -106,13 +126,13 @@ function ROICalculator({ hotel, contactId }) {
           ))}
         </div>
         <div style={{ fontSize:12, color:C.muted, marginBottom:24, lineHeight:1.6 }}>
-          These figures show the net revenue {hotel} keeps by capturing those bookings directly — the OTA commission that would have been paid is removed. The guest is the same guest. The difference is who captures the margin.
+          These figures show the net revenue {hotel} keeps by capturing those bookings directly. The OTA commission that would have been paid is removed. The guest is the same guest. The difference is who captures the margin.
         </div>
         <div style={{ background:C.black, border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"20px 24px" }}>
           <div style={{ fontSize:13, color:C.muted, marginBottom:8, letterSpacing:"0.06em", textTransform:"uppercase" }}>Net revenue recovered in the first 6 months at a 15% shift</div>
           <div style={{ fontSize:32, fontWeight:300, color:C.coral, marginBottom:8 }}>{fmt(shift15Over6Mo)}</div>
           <div style={{ fontSize:14, color:C.white, lineHeight:1.7 }}>
-            That is the net revenue {hotel} would recover in the first six months alone — from guests who are already choosing your property, just finding it through the wrong channel.
+            That is the net revenue {hotel} would recover in the first six months alone. These are guests who are already choosing your property, just finding it through the wrong channel.
           </div>
         </div>
       </div>
@@ -121,11 +141,12 @@ function ROICalculator({ hotel, contactId }) {
 }
 
 function ProofBlock() {
+  const C = useColorScheme();
   return (
     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2 }}>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"32px 28px", position:"relative" }}>
         <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral }} />
-        <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", marginBottom:20, fontWeight:600 }}>Checked In — Universal Orlando</div>
+        <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", marginBottom:20, fontWeight:600 }}>Checked In at Universal Orlando</div>
         <div style={{ marginBottom:20 }}>
           <div style={{ fontSize:48, fontWeight:300, color:C.white, lineHeight:1, marginBottom:6 }}>1.5M</div>
           <div style={{ fontSize:15, color:C.muted }}>views per episode average</div>
@@ -149,6 +170,7 @@ function ProofBlock() {
 }
 
 function VideoInfographic() {
+  const C = useColorScheme();
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
       <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:8 }}>
@@ -164,8 +186,8 @@ function VideoInfographic() {
 
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:2, marginBottom:2 }}>
         {[
-          { stat:"26%", label:"of travelers now start their hotel search on Booking.com", sub:"Overtaking Google for the first time — discovery is happening on OTAs before guests ever find you direct." },
-          { stat:"35%", label:"premium guests will pay for a half-star difference in perception", sub:"Trust and content quality directly translate to rate. Perception is not soft — it is revenue." },
+          { stat:"26%", label:"of travelers now start their hotel search on Booking.com", sub:"Overtaking Google for the first time. Discovery is happening on OTAs before guests ever find you direct." },
+          { stat:"35%", label:"premium guests will pay for a half-star difference in perception", sub:"Trust and content quality directly translate to rate. Perception is not soft. It is revenue." },
           { stat:"64%", label:"of travelers say video helped them choose where to stay", sub:"Video is not a marketing add-on. It is the deciding factor in the final booking choice." },
         ].map((item, i) => (
           <div key={i} style={{ background:C.black, border:`1px solid ${C.border}`, padding:"28px 24px", position:"relative", overflow:"hidden" }}>
@@ -180,7 +202,7 @@ function VideoInfographic() {
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2, marginBottom:2 }}>
         {[
           { stat:"73%", label:"prefer learning about a property through short-form video", sub:"Not brochures. Not photo galleries. Short-form cinematic content is now the primary trust signal before booking." },
-          { stat:"83%", label:"say video content helps them make better booking decisions", sub:"The inspiration phase has moved entirely to visual platforms. TikTok and Instagram are where intent is formed — not search engines." },
+          { stat:"83%", label:"say video content helps them make better booking decisions", sub:"The inspiration phase has moved entirely to visual platforms. TikTok and Instagram are where intent is formed. Not search engines." },
         ].map((item, i) => (
           <div key={i} style={{ background:C.black, border:`1px solid ${C.border}`, padding:"28px 24px", position:"relative", overflow:"hidden" }}>
             <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral, opacity:0.4 }} />
@@ -222,6 +244,7 @@ function VideoInfographic() {
 }
 
 function ProblemSection({ hotel }) {
+  const C = useColorScheme();
   return (
     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2 }}>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px", borderTop:`2px solid ${C.coral}` }}>
@@ -239,7 +262,7 @@ function ProblemSection({ hotel }) {
           Price still matters. But trust now plays a bigger role in the final booking decision. Guests are more cautious and more informed than ever. Even a competitive rate loses if the property does not feel worth the risk of booking outside an OTA.
         </p>
         <p style={{ fontSize:15, color:C.muted, lineHeight:1.85 }}>
-          Trust is built visually — before a guest ever speaks to your staff, reads a review, or picks up the phone.
+          Trust is built visually. Before a guest ever speaks to your staff, reads a review, or picks up the phone.
         </p>
       </div>
     </div>
@@ -247,6 +270,7 @@ function ProblemSection({ hotel }) {
 }
 
 function MechanismSection() {
+  const C = useColorScheme();
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
       <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600, marginBottom:12 }}>The missing piece</div>
@@ -254,14 +278,14 @@ function MechanismSection() {
         Video is not the replacement for OTA dependency. It is the trust infrastructure that makes direct worth choosing.
       </h3>
       <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, marginBottom:36 }}>
-        The path to a direct booking is no longer linear. Here is how it actually works — and where cinematic content changes the outcome.
+        The path to a direct booking is no longer linear. Here is how it actually works and where cinematic content changes the outcome.
       </p>
       <div style={{ display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:0, marginBottom:28 }}>
         {[
           { step:"01", label:"Discovery", sub:"Guest finds you on Booking.com, Google, or social media" },
           { step:"02", label:"Evaluation", sub:"They land on your website or Instagram to learn more" },
           { step:"03", label:"Trust signal", sub:"Cinematic content communicates brand quality and perceived value" },
-          { step:"04", label:"Conversion", sub:"Guest books direct — your property feels worth it without the OTA safety net" },
+          { step:"04", label:"Conversion", sub:"Guest books direct. Your property feels worth it without the OTA safety net." },
           { step:"05", label:"Full revenue", sub:"You capture the booking without paying OTA commission" },
         ].map((item, i) => (
           <div key={i} style={{ display:"flex", alignItems:"stretch" }}>
@@ -276,7 +300,7 @@ function MechanismSection() {
       </div>
       <div style={{ background:C.black, borderLeft:`3px solid ${C.coral}`, padding:"16px 20px" }}>
         <p style={{ fontSize:15, color:C.white, lineHeight:1.75 }}>
-          The inspiration phase has migrated almost entirely to visual platforms. TikTok and Instagram are where booking intent is formed — not search engines. What your property looks like on those platforms is not a branding decision. <span style={{ color:C.coral, fontWeight:600 }}>It is a revenue decision.</span>
+          The inspiration phase has migrated almost entirely to visual platforms. TikTok and Instagram are where booking intent is formed. Not search engines. What your property looks like on those platforms is not a branding decision. <span style={{ color:C.coral, fontWeight:600 }}>It is a revenue decision.</span>
         </p>
       </div>
     </div>
@@ -284,6 +308,7 @@ function MechanismSection() {
 }
 
 function IndependentHotelsSection() {
+  const C = useColorScheme();
   return (
     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2 }}>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px", borderTop:`2px solid ${C.coral}` }}>
@@ -298,7 +323,7 @@ function IndependentHotelsSection() {
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
         <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600, marginBottom:20 }}>Your competitive advantage</div>
         <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, marginBottom:16 }}>
-          Independent hotels do not have that badge. What they have is character, specificity, and a story that no Marriott can tell. Cinematic content is how an independent property competes on perceived value — and wins.
+          Independent hotels do not have that badge. What they have is character, specificity, and a story that no Marriott can tell. Cinematic content is how an independent property competes on perceived value and wins.
         </p>
         <p style={{ fontSize:15, color:C.white, lineHeight:1.85, fontWeight:500 }}>
           The guest who books your property direct is not settling. They are choosing. Content is what makes that choice feel obvious.
@@ -309,6 +334,7 @@ function IndependentHotelsSection() {
 }
 
 function DirectionCard({ index, direction }) {
+  const C = useColorScheme();
   const [open, setOpen] = useState(index === 0);
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, overflow:"hidden" }}>
@@ -334,6 +360,7 @@ function DirectionCard({ index, direction }) {
 }
 
 function PortalBlock({ hotel }) {
+  const C = useColorScheme();
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, overflow:"hidden" }}>
       <div style={{ background:`linear-gradient(135deg, ${C.coral}12 0%, transparent 60%)`, padding:"40px 36px", borderBottom:`1px solid ${C.border}` }}>
@@ -367,6 +394,7 @@ function PortalBlock({ hotel }) {
 }
 
 function GateSection({ gated, onUngate, hotel }) {
+  const C = useColorScheme();
   const inner = (
     <div style={{ textAlign:"center" }}>
       <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:16, fontWeight:600 }}>Ready to see the full breakdown</div>
@@ -398,6 +426,7 @@ function GateSection({ gated, onUngate, hotel }) {
 }
 
 function GMView({ data, gated, onUngate }) {
+  const C = useColorScheme();
   const { contact, concept, propertyImages = [] } = data;
   const heroImg = propertyImages[0] || null;
   const [heroRef, heroStyle] = useFadeUp(0);
@@ -465,7 +494,7 @@ function GMView({ data, gated, onUngate }) {
         <div ref={dirRef} style={{ ...dirStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>What we produce for {contact.company}</SectionLabel>
           <p style={{ fontSize:16, color:C.muted, lineHeight:1.8, maxWidth:600, marginBottom:8 }}>Month-to-month. Specifically. What gets filmed, what gets delivered, where it lives, and how often. Three content directions built for your property.</p>
-          <div style={{ fontSize:13, color:C.muted, marginBottom:28, lineHeight:1.7 }}>Each direction is a Signature Storyline — a recurring content format designed to build guest trust over time, not just produce one-off assets.</div>
+          <div style={{ fontSize:13, color:C.muted, marginBottom:28, lineHeight:1.7 }}>Each direction is a Signature Storyline. A recurring content format designed to build guest trust over time, not just produce one-off assets.</div>
           <div style={{ display:"flex", flexDirection:"column", gap:2 }}>
             {concept.content_directions.map((dir, i) => (
               <DirectionCard key={i} index={i} direction={dir} />
