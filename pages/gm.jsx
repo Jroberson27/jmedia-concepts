@@ -53,32 +53,55 @@ function SectionLabel({ children }) {
 
 function ROICalculator({ hotel, contactId }) {
   const C = useColorScheme();
-  const [revenue, setRevenue] = useState(5000000);
-  const [otaPct, setOtaPct] = useState(40);
+  const [adr, setAdr]           = useState(200);
+  const [rooms, setRooms]       = useState(80);
+  const [occupancy, setOccupancy] = useState(70);
+  const [otaPct, setOtaPct]     = useState(40);
   const [commission, setCommission] = useState(23);
   const debounceRef = useRef(null);
 
-  // Net incremental revenue model
-  // Annual OTA pool = revenue × OTA%
-  // Net shift revenue = revenue × OTA% × shift% × (1 - commission%)
-  //   → This is the revenue kept after removing the OTA fee that would have been paid
+  // Derived revenue from GM-native inputs
+  // revenue = ADR × rooms × (occupancy/100) × 365
+  // OTA pool = revenue × (OTA/100)
+  // shift15 = revenue × (OTA/100) × 0.15 × (1 - commission/100)
   // 6-month = shift15 / 2
-  const annualOTAPool  = Math.round(revenue * (otaPct / 100));
-  const netFactor      = 1 - (commission / 100);
-  const shift10        = Math.round(revenue * (otaPct / 100) * 0.10 * netFactor);
-  const shift15        = Math.round(revenue * (otaPct / 100) * 0.15 * netFactor);
-  const shift20        = Math.round(revenue * (otaPct / 100) * 0.20 * netFactor);
-  const shift15Over6Mo = Math.round(shift15 / 2);
-  const fmt = (n) => "$" + n.toLocaleString();
 
-  const track = (r, o, c) => {
+  // Tier by ADR: under $150 Essential, $150-$300 Signature, over $300 Flagship
+  // Retainer = tier floor + room push + OTA push, capped at ceiling
+  // Room push: <50 rooms 0%, 50-150 rooms 30% of range, >150 rooms 60% of range
+  // OTA push:  <25% 0%, 25-45% 30% of range, >45% 40% of range
+
+  const revenue       = Math.round(adr * rooms * (occupancy / 100) * 365);
+  const annualOTAPool = Math.round(revenue * (otaPct / 100));
+  const netFactor     = 1 - (commission / 100);
+  const shift10       = Math.round(annualOTAPool * 0.10 * netFactor);
+  const shift15       = Math.round(annualOTAPool * 0.15 * netFactor);
+  const shift20       = Math.round(annualOTAPool * 0.20 * netFactor);
+  const shift15_6mo   = Math.round(shift15 / 2);
+  const perRoomAnnual = Math.round(shift15 / rooms);
+  const perRoom6mo    = Math.round(shift15_6mo / rooms);
+
+  // Pricing logic — verified: 200 rooms $150 ADR 65% occ 35% OTA 22% comm → $5,300 Signature
+  let tierLabel, tierFloor, tierCeiling;
+  if (adr < 150)       { tierLabel = "Essential"; tierFloor = 2500; tierCeiling = 3500; }
+  else if (adr <= 300) { tierLabel = "Signature"; tierFloor = 3500; tierCeiling = 5500; }
+  else                 { tierLabel = "Flagship";  tierFloor = 5500; tierCeiling = 8500; }
+  const tierRange    = tierCeiling - tierFloor;
+  const roomPushPct  = rooms < 50 ? 0 : rooms <= 150 ? 0.30 : 0.60;
+  const otaPushPct   = otaPct < 25 ? 0 : otaPct <= 45 ? 0.30 : 0.40;
+  const rawRetainer  = tierFloor + Math.round(tierRange * roomPushPct) + Math.round(tierRange * otaPushPct);
+  const retainer     = Math.min(tierCeiling, rawRetainer);
+
+  const fmt = (n) => "$" + Math.round(n).toLocaleString();
+
+  const track = (a, r, o, p, c) => {
     if (!contactId) return;
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       fetch("/api/track", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contactId, revenue: r, otaPct: o, commission: c }),
+        body: JSON.stringify({ contactId, adr: a, rooms: r, occupancy: o, otaPct: p, commission: c }),
       }).catch(() => {});
     }, 2000);
   };
@@ -86,17 +109,19 @@ function ROICalculator({ hotel, contactId }) {
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
       <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:8, fontWeight:600 }}>ROI Calculator</div>
-      <p style={{ fontSize:16, color:C.body, marginBottom:32, lineHeight:1.7 }}>Adjust the numbers to see what a shift to direct bookings means for {hotel}.</p>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:24, marginBottom:40 }}>
+      <p style={{ fontSize:16, color:C.body, marginBottom:28, lineHeight:1.7 }}>Use the numbers you already know. We will show you what a shift to direct bookings means for {hotel}.</p>
+
+      <div style={{ fontSize:12, color:C.muted, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:14 }}>Your property</div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:24, marginBottom:20 }}>
         {[
-          { label:"Annual Room Revenue", value:revenue, setter:(v) => { setRevenue(v); track(v, otaPct, commission); }, min:500000, max:50000000, step:250000, fmt:true },
-          { label:"OTA Booking %", value:otaPct, setter:(v) => { setOtaPct(v); track(revenue, v, commission); }, min:5, max:80, step:1, suffix:"%" },
-          { label:"OTA Commission %", value:commission, setter:(v) => { setCommission(v); track(revenue, otaPct, v); }, min:10, max:30, step:1, suffix:"%" },
+          { label:"Average Daily Rate", value:adr, setter:(v) => { setAdr(v); track(v, rooms, occupancy, otaPct, commission); }, min:50, max:2000, step:10, prefix:"$" },
+          { label:"Room Count", value:rooms, setter:(v) => { setRooms(v); track(adr, v, occupancy, otaPct, commission); }, min:10, max:500, step:5, suffix:" rooms" },
+          { label:"Occupancy Rate", value:occupancy, setter:(v) => { setOccupancy(v); track(adr, rooms, v, otaPct, commission); }, min:20, max:100, step:1, suffix:"%" },
         ].map((s, i) => (
           <div key={i}>
             <div style={{ fontSize:13, color:C.muted, marginBottom:8, fontWeight:600 }}>{s.label}</div>
             <div style={{ fontSize:24, fontWeight:300, color:C.white, marginBottom:12 }}>
-              {s.fmt ? "$" + Number(s.value).toLocaleString() : s.value}{s.suffix || ""}
+              {s.prefix || ""}{Number(s.value).toLocaleString()}{s.suffix || ""}
             </div>
             <input type="range" min={s.min} max={s.max} step={s.step} value={s.value}
               onChange={e => s.setter(Number(e.target.value))}
@@ -104,12 +129,37 @@ function ROICalculator({ hotel, contactId }) {
           </div>
         ))}
       </div>
+
+      <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"12px 16px", marginBottom:24, display:"flex", alignItems:"center", gap:12 }}>
+        <div style={{ fontSize:12, color:C.muted, letterSpacing:"0.06em", textTransform:"uppercase" }}>Estimated annual room revenue</div>
+        <div style={{ fontSize:20, fontWeight:300, color:C.coral }}>{fmt(revenue)}</div>
+      </div>
+
+      <div style={{ fontSize:12, color:C.muted, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:14 }}>OTA exposure</div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:24, marginBottom:32 }}>
+        {[
+          { label:"OTA Booking %", value:otaPct, setter:(v) => { setOtaPct(v); track(adr, rooms, occupancy, v, commission); }, min:5, max:80, step:1, suffix:"%" },
+          { label:"OTA Commission %", value:commission, setter:(v) => { setCommission(v); track(adr, rooms, occupancy, otaPct, v); }, min:10, max:30, step:1, suffix:"%" },
+        ].map((s, i) => (
+          <div key={i}>
+            <div style={{ fontSize:13, color:C.muted, marginBottom:8, fontWeight:600 }}>{s.label}</div>
+            <div style={{ fontSize:24, fontWeight:300, color:C.white, marginBottom:12 }}>
+              {s.value}{s.suffix}
+            </div>
+            <input type="range" min={s.min} max={s.max} step={s.step} value={s.value}
+              onChange={e => s.setter(Number(e.target.value))}
+              style={{ width:"100%", accentColor:C.coral, cursor:"pointer" }} />
+          </div>
+        ))}
+      </div>
+
       <div style={{ borderTop:`1px solid ${C.border}`, paddingTop:32 }}>
         <div style={{ background:C.black, border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"20px 24px", marginBottom:8 }}>
           <div style={{ fontSize:13, color:C.muted, marginBottom:4, letterSpacing:"0.06em", textTransform:"uppercase" }}>Annual booking revenue flowing through OTAs</div>
           <div style={{ fontSize:40, fontWeight:300, color:C.coral, marginBottom:6 }}>{fmt(annualOTAPool)}</div>
-          <div style={{ fontSize:13, color:C.body, lineHeight:1.6 }}>This is the portion of {hotel}'s annual room revenue being booked through OTA channels. Every booking in this pool is a guest who found you on Expedia or Booking.com instead of your own site. You paid {commission}% for the privilege.</div>
+          <div style={{ fontSize:13, color:C.body, lineHeight:1.6 }}>Every booking in this pool is a guest who found {hotel} on Expedia or Booking.com instead of your own site. You paid {commission}% for the privilege.</div>
         </div>
+
         <div style={{ fontSize:13, color:C.muted, marginBottom:16, marginTop:24, letterSpacing:"0.06em", textTransform:"uppercase" }}>Net revenue recovered by shifting bookings to direct</div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:8 }}>
           {[
@@ -125,14 +175,41 @@ function ROICalculator({ hotel, contactId }) {
             </div>
           ))}
         </div>
-        <div style={{ fontSize:13, color:C.body, marginBottom:24, lineHeight:1.6 }}>
+
+        <div style={{ fontSize:13, color:C.body, marginBottom:16, lineHeight:1.6 }}>
           These figures show the net revenue {hotel} keeps by capturing those bookings directly. The OTA commission that would have been paid is removed. The guest is the same guest. The difference is who captures the margin.
         </div>
-        <div style={{ background:C.black, border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"20px 24px" }}>
-          <div style={{ fontSize:13, color:C.muted, marginBottom:8, letterSpacing:"0.06em", textTransform:"uppercase" }}>Net revenue recovered in the first 6 months at a 15% shift</div>
-          <div style={{ fontSize:32, fontWeight:300, color:C.coral, marginBottom:8 }}>{fmt(shift15Over6Mo)}</div>
-          <div style={{ fontSize:14, color:C.white, lineHeight:1.7 }}>
-            That is the net revenue {hotel} would recover in the first six months alone. These are guests who are already choosing your property, just finding it through the wrong channel.
+
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2, marginBottom:2 }}>
+          <div style={{ background:C.black, border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"20px 24px" }}>
+            <div style={{ fontSize:13, color:C.muted, marginBottom:8, letterSpacing:"0.06em", textTransform:"uppercase" }}>6-month recovery at 15% shift</div>
+            <div style={{ fontSize:32, fontWeight:300, color:C.coral, marginBottom:8 }}>{fmt(shift15_6mo)}</div>
+            <div style={{ fontSize:14, color:C.body, lineHeight:1.7 }}>
+              These are guests who are already choosing {hotel}. Just finding it through the wrong channel.
+            </div>
+          </div>
+          <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"20px 24px" }}>
+            <div style={{ fontSize:13, color:C.muted, marginBottom:16, letterSpacing:"0.06em", textTransform:"uppercase" }}>Per room — 15% shift</div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
+              <div>
+                <div style={{ fontSize:22, fontWeight:300, color:C.white }}>{fmt(perRoomAnnual)}</div>
+                <div style={{ fontSize:12, color:C.muted, marginTop:4 }}>per room annually</div>
+              </div>
+              <div>
+                <div style={{ fontSize:22, fontWeight:300, color:C.white }}>{fmt(perRoom6mo)}</div>
+                <div style={{ fontSize:12, color:C.muted, marginTop:4 }}>per room over 6 months</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"20px 24px", marginTop:2, display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:16 }}>
+          <div>
+            <div style={{ fontSize:13, color:C.muted, marginBottom:4, letterSpacing:"0.06em", textTransform:"uppercase" }}>Recommended engagement</div>
+            <div style={{ fontSize:24, fontWeight:300, color:C.coral }}>{fmt(retainer)}<span style={{ fontSize:14, color:C.muted }}> / month</span></div>
+          </div>
+          <div style={{ background:C.coral+"15", border:`1px solid ${C.coralDim}`, padding:"8px 20px" }}>
+            <div style={{ fontSize:13, color:C.coral, fontWeight:600, letterSpacing:"0.08em", textTransform:"uppercase" }}>{tierLabel}</div>
           </div>
         </div>
       </div>
