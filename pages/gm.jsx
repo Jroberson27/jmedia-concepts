@@ -88,9 +88,7 @@ function ROICalculator({ hotel, contactId }) {
   else                 { tierLabel = "Flagship";  tierFloor = 5500; tierCeiling = 8500; }
   const tierRange    = tierCeiling - tierFloor;
   const roomPushPct  = rooms < 50 ? 0 : rooms <= 150 ? 0.30 : 0.60;
-  const otaPushPct   = otaPct < 25 ? 0 : otaPct <= 45 ? 0.30 : 0.40;
-  const rawRetainer  = tierFloor + Math.round(tierRange * roomPushPct) + Math.round(tierRange * otaPushPct);
-  const retainer     = Math.min(tierCeiling, rawRetainer);
+  const retainer     = Math.min(tierCeiling, tierFloor + Math.round(tierRange * roomPushPct));
 
   const fmt = (n) => "$" + Math.round(n).toLocaleString();
 
@@ -203,15 +201,7 @@ function ROICalculator({ hotel, contactId }) {
           </div>
         </div>
 
-        <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"20px 24px", marginTop:2, display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:16 }}>
-          <div>
-            <div style={{ fontSize:13, color:C.muted, marginBottom:4, letterSpacing:"0.06em", textTransform:"uppercase" }}>Recommended engagement</div>
-            <div style={{ fontSize:24, fontWeight:300, color:C.coral }}>{fmt(retainer)}<span style={{ fontSize:14, color:C.muted }}> / month</span></div>
-          </div>
-          <div style={{ background:C.coral+"15", border:`1px solid ${C.coralDim}`, padding:"8px 20px" }}>
-            <div style={{ fontSize:13, color:C.coral, fontWeight:600, letterSpacing:"0.08em", textTransform:"uppercase" }}>{tierLabel}</div>
-          </div>
-        </div>
+
       </div>
     </div>
   );
