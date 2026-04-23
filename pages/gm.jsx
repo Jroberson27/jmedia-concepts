@@ -138,11 +138,84 @@ function ProofBlock() {
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"32px 28px" }}>
         <div style={{ fontSize:12, color:C.muted, letterSpacing:"0.1em", marginBottom:16, fontWeight:600 }}>Industry Validation</div>
         <p style={{ fontSize:16, color:C.white, lineHeight:1.85, marginBottom:20 }}>
-          Loews Hotels launched a dedicated YouTube channel to syndicate the Checked In series after seeing its direct booking impact on Universal Orlando.
+          Lowe's Hotels launched a dedicated YouTube channel to syndicate the Checked In series after seeing its direct booking impact on Universal Orlando.
         </p>
         <p style={{ fontSize:15, color:C.muted, lineHeight:1.8 }}>
           When a branded hotel group builds a distribution channel around your content model, that is proof of concept at scale. That same approach is what I bring to independent properties.
         </p>
+      </div>
+    </div>
+  );
+}
+
+function VideoInfographic() {
+  return (
+    <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
+      <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:8 }}>
+        <div style={{ width:20, height:1, background:C.coral }} />
+        <span style={{ fontFamily:FONT, fontSize:13, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600 }}>The data behind the strategy</span>
+      </div>
+      <h3 style={{ fontFamily:FONT, fontSize:"clamp(20px,2.5vw,26px)", fontWeight:600, color:C.white, marginBottom:8, lineHeight:1.3 }}>
+        Video is not the discovery tool. It is the conversion tool.
+      </h3>
+      <p style={{ fontSize:15, color:C.muted, lineHeight:1.8, marginBottom:36, maxWidth:640 }}>
+        Guests find properties through OTAs. They choose where to book through trust. Cinematic content is the infrastructure that makes direct worth choosing.
+      </p>
+
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:2, marginBottom:2 }}>
+        {[
+          { stat:"26%", label:"of travelers now start their hotel search on Booking.com", sub:"Overtaking Google for the first time — discovery is happening on OTAs before guests ever find you direct." },
+          { stat:"35%", label:"premium guests will pay for a half-star difference in perception", sub:"Trust and content quality directly translate to rate. Perception is not soft — it is revenue." },
+          { stat:"64%", label:"of travelers say video helped them choose where to stay", sub:"Video is not a marketing add-on. It is the deciding factor in the final booking choice." },
+        ].map((item, i) => (
+          <div key={i} style={{ background:C.black, border:`1px solid ${C.border}`, padding:"28px 24px", position:"relative", overflow:"hidden" }}>
+            <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral, opacity:0.4 }} />
+            <div style={{ fontSize:44, fontWeight:300, color:C.coral, lineHeight:1, marginBottom:10 }}>{item.stat}</div>
+            <div style={{ fontSize:14, color:C.white, fontWeight:600, lineHeight:1.4, marginBottom:10 }}>{item.label}</div>
+            <div style={{ fontSize:13, color:C.muted, lineHeight:1.7 }}>{item.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2, marginBottom:2 }}>
+        {[
+          { stat:"73%", label:"prefer learning about a property through short-form video", sub:"Not brochures. Not photo galleries. Short-form cinematic content is now the primary trust signal before booking." },
+          { stat:"83%", label:"say video content helps them make better booking decisions", sub:"The inspiration phase has moved entirely to visual platforms. TikTok and Instagram are where intent is formed — not search engines." },
+        ].map((item, i) => (
+          <div key={i} style={{ background:C.black, border:`1px solid ${C.border}`, padding:"28px 24px", position:"relative", overflow:"hidden" }}>
+            <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:C.coral, opacity:0.4 }} />
+            <div style={{ fontSize:44, fontWeight:300, color:C.coral, lineHeight:1, marginBottom:10 }}>{item.stat}</div>
+            <div style={{ fontSize:14, color:C.white, fontWeight:600, lineHeight:1.4, marginBottom:10 }}>{item.label}</div>
+            <div style={{ fontSize:13, color:C.muted, lineHeight:1.7 }}>{item.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ background:C.black, border:`1px solid ${C.border}`, padding:"28px 32px" }}>
+        <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600, marginBottom:20 }}>How the mechanism works</div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:0, alignItems:"center" }}>
+          {[
+            { step:"01", label:"Guest discovers property", sub:"OTA or social platform" },
+            { step:"02", label:"Lands on hotel site or social", sub:"Actively evaluating" },
+            { step:"03", label:"Cinematic content builds trust", sub:"Perceived value increases" },
+            { step:"04", label:"Guest books direct", sub:"Bypasses OTA entirely" },
+            { step:"05", label:"Hotel captures full revenue", sub:"Zero commission paid" },
+          ].map((item, i) => (
+            <div key={i} style={{ display:"flex", alignItems:"stretch", flex:1 }}>
+              <div style={{ flex:1, padding:"16px 12px", borderLeft:`1px solid ${C.border}`, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}`, borderRight: i === 4 ? `1px solid ${C.border}` : "none", background: i === 4 ? C.coral + "10" : "transparent" }}>
+                <div style={{ fontSize:11, color:C.coral, fontWeight:600, marginBottom:8 }}>{item.step}</div>
+                <div style={{ fontSize:13, color:C.white, fontWeight:600, lineHeight:1.4, marginBottom:6 }}>{item.label}</div>
+                <div style={{ fontSize:11, color:C.muted, lineHeight:1.5 }}>{item.sub}</div>
+              </div>
+              {i < 4 && <div style={{ width:20, display:"flex", alignItems:"center", justifyContent:"center", color:C.coral, fontSize:14, flexShrink:0 }}>→</div>}
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop:20, paddingTop:20, borderTop:`1px solid ${C.border}` }}>
+          <p style={{ fontSize:15, color:C.white, lineHeight:1.8, fontWeight:400 }}>
+            Video is not the replacement for OTA dependency. <span style={{ color:C.coral, fontWeight:600 }}>It is the trust infrastructure that makes direct worth choosing.</span>
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -282,6 +355,12 @@ function GMView({ data, gated, onUngate }) {
         <div ref={proofRef} style={{ ...proofStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>Proven at scale</SectionLabel>
           <ProofBlock />
+        </div>
+      </div>
+      <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
+        <div style={{ maxWidth:860, margin:"0 auto" }}>
+          <SectionLabel>Why video moves the booking</SectionLabel>
+          <VideoInfographic />
         </div>
       </div>
       <div style={{ padding:"80px 48px", background:C.dark, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}` }}>
