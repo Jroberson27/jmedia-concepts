@@ -6,11 +6,11 @@ const FONT = "'Inter', system-ui, sans-serif";
 
 const DARK = {
   black:"#0A0A0A", dark:"#0F0F0F", card:"#141414", border:"#1E1E1E",
-  coral:"#E8625A", coralDim:"#5A1E1A", white:"#F4F2EE", muted:"#888888", dim:"#2A2A2A"
+  coral:"#E8625A", coralDim:"#5A1E1A", white:"#F4F2EE", body:"#C8C4BC", muted:"#777777", dim:"#2A2A2A"
 };
 const LIGHT = {
   black:"#FFFFFF", dark:"#F5F4F1", card:"#FAFAF8", border:"#E2E0D8",
-  coral:"#C94B43", coralDim:"#F5D0CE", white:"#111111", muted:"#666666", dim:"#E8E6E0"
+  coral:"#C94B43", coralDim:"#F5D0CE", white:"#111111", body:"#2E2B26", muted:"#888888", dim:"#E8E6E0"
 };
 
 function useColorScheme() {
@@ -86,7 +86,7 @@ function ROICalculator({ hotel, contactId }) {
   return (
     <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
       <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:8, fontWeight:600 }}>ROI Calculator</div>
-      <p style={{ fontSize:16, color:C.muted, marginBottom:32, lineHeight:1.7 }}>Adjust the numbers to see what a shift to direct bookings means for {hotel}.</p>
+      <p style={{ fontSize:16, color:C.body, marginBottom:32, lineHeight:1.7 }}>Adjust the numbers to see what a shift to direct bookings means for {hotel}.</p>
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:24, marginBottom:40 }}>
         {[
           { label:"Annual Room Revenue", value:revenue, setter:(v) => { setRevenue(v); track(v, otaPct, commission); }, min:500000, max:50000000, step:250000, fmt:true },
@@ -149,11 +149,11 @@ function ProofBlock() {
         <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", marginBottom:20, fontWeight:600 }}>Checked In at Universal Orlando</div>
         <div style={{ marginBottom:20 }}>
           <div style={{ fontSize:48, fontWeight:300, color:C.white, lineHeight:1, marginBottom:6 }}>1.5M</div>
-          <div style={{ fontSize:15, color:C.muted }}>views per episode average</div>
+          <div style={{ fontSize:15, color:C.body }}>views per episode average</div>
         </div>
         <div>
           <div style={{ fontSize:48, fontWeight:300, color:C.white, lineHeight:1, marginBottom:6 }}>69%</div>
-          <div style={{ fontSize:15, color:C.muted }}>watch completion rate</div>
+          <div style={{ fontSize:15, color:C.body }}>watch completion rate</div>
         </div>
       </div>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"32px 28px" }}>
@@ -161,7 +161,7 @@ function ProofBlock() {
         <p style={{ fontSize:16, color:C.white, lineHeight:1.85, marginBottom:20 }}>
           Lowe's Hotels launched a dedicated YouTube channel to syndicate the Checked In series after seeing its direct booking impact on Universal Orlando.
         </p>
-        <p style={{ fontSize:15, color:C.muted, lineHeight:1.8 }}>
+        <p style={{ fontSize:15, color:C.body, lineHeight:1.8 }}>
           When a branded hotel group builds a distribution channel around your content model, that is proof of concept at scale. That same approach is what I bring to independent properties.
         </p>
       </div>
@@ -180,7 +180,7 @@ function VideoInfographic() {
       <h3 style={{ fontFamily:FONT, fontSize:"clamp(20px,2.5vw,26px)", fontWeight:600, color:C.white, marginBottom:8, lineHeight:1.3 }}>
         Video is not the discovery tool. It is the conversion tool.
       </h3>
-      <p style={{ fontSize:15, color:C.muted, lineHeight:1.8, marginBottom:36, maxWidth:640 }}>
+      <p style={{ fontSize:15, color:C.body, lineHeight:1.8, marginBottom:36, maxWidth:640 }}>
         Guests find properties through OTAs. They choose where to book through trust. Cinematic content is the infrastructure that makes direct worth choosing.
       </p>
 
@@ -252,16 +252,16 @@ function ProblemSection({ hotel }) {
         <h3 style={{ fontFamily:FONT, fontSize:"clamp(18px,2vw,24px)", fontWeight:600, color:C.white, lineHeight:1.3, marginBottom:16 }}>
           Guests are already finding {hotel}. The question is what they see when they do.
         </h3>
-        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85 }}>
+        <p style={{ fontSize:15, color:C.body, lineHeight:1.85 }}>
           Today a guest discovers your property on Booking.com, compares it on Google, checks your Instagram, and only then decides whether to book direct or return to the OTA. The OTA is not the problem. The gap in your visual story is.
         </p>
       </div>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
         <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600, marginBottom:20 }}>What drives the decision</div>
-        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, marginBottom:20 }}>
+        <p style={{ fontSize:15, color:C.body, lineHeight:1.85, marginBottom:20 }}>
           Price still matters. But trust now plays a bigger role in the final booking decision. Guests are more cautious and more informed than ever. Even a competitive rate loses if the property does not feel worth the risk of booking outside an OTA.
         </p>
-        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85 }}>
+        <p style={{ fontSize:15, color:C.body, lineHeight:1.85 }}>
           Trust is built visually. Before a guest ever speaks to your staff, reads a review, or picks up the phone.
         </p>
       </div>
@@ -277,7 +277,7 @@ function MechanismSection() {
       <h3 style={{ fontFamily:FONT, fontSize:"clamp(18px,2vw,24px)", fontWeight:600, color:C.white, lineHeight:1.3, marginBottom:12 }}>
         Video is not the replacement for OTA dependency. It is the trust infrastructure that makes direct worth choosing.
       </h3>
-      <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, marginBottom:36 }}>
+      <p style={{ fontSize:15, color:C.body, lineHeight:1.85, marginBottom:36 }}>
         The path to a direct booking is no longer linear. Here is how it actually works and where cinematic content changes the outcome.
       </p>
       <div style={{ display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:0, marginBottom:28 }}>
@@ -313,16 +313,16 @@ function IndependentHotelsSection() {
     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:2 }}>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px", borderTop:`2px solid ${C.coral}` }}>
         <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600, marginBottom:20 }}>The branded hotel advantage</div>
-        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, marginBottom:16 }}>
+        <p style={{ fontSize:15, color:C.body, lineHeight:1.85, marginBottom:16 }}>
           Marriott, Hilton, and Hyatt have loyalty programs, global name recognition, and decades of brand equity doing the trust-building before a guest ever sees their content.
         </p>
-        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85 }}>
+        <p style={{ fontSize:15, color:C.body, lineHeight:1.85 }}>
           A guest books a Marriott partly because they know what a Marriott feels like. That familiarity is the trust signal. It is built into the brand.
         </p>
       </div>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, padding:"40px 36px" }}>
         <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.1em", textTransform:"uppercase", fontWeight:600, marginBottom:20 }}>Your competitive advantage</div>
-        <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, marginBottom:16 }}>
+        <p style={{ fontSize:15, color:C.body, lineHeight:1.85, marginBottom:16 }}>
           Independent hotels do not have that badge. What they have is character, specificity, and a story that no Marriott can tell. Cinematic content is how an independent property competes on perceived value and wins.
         </p>
         <p style={{ fontSize:15, color:C.white, lineHeight:1.85, fontWeight:500 }}>
@@ -343,11 +343,11 @@ function DirectionCard({ index, direction }) {
           <span style={{ fontSize:13, color:C.coral, fontWeight:600 }}>{String(index + 1).padStart(2, "0")}</span>
           <span style={{ fontSize:18, fontWeight:600, color:C.white }}>{direction.name}</span>
         </div>
-        <span style={{ fontSize:18, color:C.muted, transform:open ? "rotate(45deg)" : "rotate(0)", transition:"transform 0.25s ease", lineHeight:1 }}>+</span>
+        <span style={{ fontSize:18, color:C.body, transform:open ? "rotate(45deg)" : "rotate(0)", transition:"transform 0.25s ease", lineHeight:1 }}>+</span>
       </button>
       <div style={{ maxHeight:open ? "220px" : "0", overflow:"hidden", transition:"max-height 0.35s ease" }}>
         <div style={{ padding:"0 28px 24px", borderTop:`1px solid ${C.border}` }}>
-          <p style={{ fontSize:15, color:C.muted, lineHeight:1.8, marginTop:16, marginBottom:14 }}>{direction.angle}</p>
+          <p style={{ fontSize:15, color:C.body, lineHeight:1.8, marginTop:16, marginBottom:14 }}>{direction.angle}</p>
           <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
             {direction.formats.map((f, j) => (
               <span key={j} style={{ fontSize:9, color:C.coral, background:C.coral + "11", border:`1px solid ${C.coralDim}`, padding:"4px 10px" }}>{f}</span>
@@ -368,7 +368,7 @@ function PortalBlock({ hotel }) {
         <h3 style={{ fontFamily:FONT, fontSize:"clamp(20px,2.5vw,28px)", fontWeight:600, color:C.white, marginBottom:12, lineHeight:1.2 }}>
           You will not just get content. You will get proof it is working.
         </h3>
-        <p style={{ fontSize:16, color:C.muted, lineHeight:1.8, maxWidth:560 }}>
+        <p style={{ fontSize:16, color:C.body, lineHeight:1.8, maxWidth:560 }}>
           Every JMEDIA partnership includes access to a dedicated client portal that connects directly to your property management system and tracks direct booking impact over the life of our engagement.
         </p>
       </div>
@@ -381,13 +381,13 @@ function PortalBlock({ hotel }) {
           <div key={i} style={{ padding:"28px 24px", borderRight: i < 2 ? `1px solid ${C.border}` : "none" }}>
             <div style={{ fontSize:13, color:C.coral, fontWeight:600, marginBottom:12 }}>{item.num}</div>
             <div style={{ fontSize:17, fontWeight:600, color:C.white, marginBottom:10 }}>{item.title}</div>
-            <p style={{ fontSize:15, color:C.muted, lineHeight:1.75 }}>{item.body}</p>
+            <p style={{ fontSize:15, color:C.body, lineHeight:1.75 }}>{item.body}</p>
           </div>
         ))}
       </div>
       <div style={{ borderTop:`1px solid ${C.border}`, padding:"20px 36px", display:"flex", alignItems:"center", gap:16 }}>
         <div style={{ width:6, height:6, borderRadius:"50%", background:C.coral, flexShrink:0 }} />
-        <p style={{ fontSize:15, color:C.muted, lineHeight:1.7 }}>No other video production company in the independent hotel space offers PMS-connected performance tracking. This is the difference between a vendor and a partner.</p>
+        <p style={{ fontSize:15, color:C.body, lineHeight:1.7 }}>No other video production company in the independent hotel space offers PMS-connected performance tracking. This is the difference between a vendor and a partner.</p>
       </div>
     </div>
   );
@@ -399,7 +399,7 @@ function GateSection({ gated, onUngate, hotel }) {
     <div style={{ textAlign:"center" }}>
       <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:16, fontWeight:600 }}>Ready to see the full breakdown</div>
       <p style={{ fontSize:"clamp(20px,3vw,28px)", fontWeight:300, color:C.white, marginBottom:12 }}>Book a 15-minute call to get the full PDF for {hotel}</p>
-      <p style={{ fontSize:15, color:C.muted, maxWidth:400, margin:"0 auto 32px", lineHeight:1.75 }}>No agenda. No pressure. I will send the PDF before we speak.</p>
+      <p style={{ fontSize:15, color:C.body, maxWidth:400, margin:"0 auto 32px", lineHeight:1.75 }}>No agenda. No pressure. I will send the PDF before we speak.</p>
       <a href={CALENDAR_URL} target="_blank" rel="noopener noreferrer"
         style={{ display:"inline-block", background:C.coral, color:"#fff", fontFamily:FONT, fontSize:13, letterSpacing:"0.12em", textTransform:"uppercase", padding:"16px 44px", textDecoration:"none", fontWeight:600 }}
         onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
@@ -453,7 +453,7 @@ function GMView({ data, gated, onUngate }) {
         <div ref={heroRef} style={{ ...heroStyle, position:"relative", padding:"80px 48px", maxWidth:860 }}>
           <div style={{ fontFamily:FONT, fontSize:13, color:C.coral, letterSpacing:"0.14em", textTransform:"uppercase", marginBottom:20, fontWeight:600 }}>Prepared exclusively for {contact.company}</div>
           <h1 style={{ fontFamily:FONT, fontSize:"clamp(32px,5vw,60px)", fontWeight:700, lineHeight:1.1, color:C.white, marginBottom:24, letterSpacing:"-0.02em" }}>{concept.headline}</h1>
-          <p style={{ fontSize:18, color:C.muted, lineHeight:1.85, maxWidth:560, marginBottom:32 }}>{concept.opening}</p>
+          <p style={{ fontSize:18, color:C.body, lineHeight:1.85, maxWidth:560, marginBottom:32 }}>{concept.opening}</p>
           {contact.jmedia_outreach_hook && (
             <div style={{ background:C.coral + "12", border:`1px solid ${C.coralDim}`, borderLeft:`3px solid ${C.coral}`, padding:"16px 20px", maxWidth:560 }}>
               <p style={{ fontSize:15, color:C.white, lineHeight:1.75 }}>{contact.jmedia_outreach_hook}</p>
@@ -493,7 +493,7 @@ function GMView({ data, gated, onUngate }) {
       <div style={{ padding:"80px 48px" }}>
         <div ref={dirRef} style={{ ...dirStyle, maxWidth:860, margin:"0 auto" }}>
           <SectionLabel>What we produce for {contact.company}</SectionLabel>
-          <p style={{ fontSize:16, color:C.muted, lineHeight:1.8, maxWidth:600, marginBottom:8 }}>Month-to-month. Specifically. What gets filmed, what gets delivered, where it lives, and how often. Three content directions built for your property.</p>
+          <p style={{ fontSize:16, color:C.body, lineHeight:1.8, maxWidth:600, marginBottom:8 }}>Month-to-month. Specifically. What gets filmed, what gets delivered, where it lives, and how often. Three content directions built for your property.</p>
           <div style={{ fontSize:13, color:C.muted, marginBottom:28, lineHeight:1.7 }}>Each direction is a Signature Storyline. A recurring content format designed to build guest trust over time, not just produce one-off assets.</div>
           <div style={{ display:"flex", flexDirection:"column", gap:2 }}>
             {concept.content_directions.map((dir, i) => (
