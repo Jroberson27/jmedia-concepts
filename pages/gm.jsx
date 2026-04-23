@@ -429,8 +429,8 @@ function DirectionCard({ index, direction }) {
 function PortalBlock({ hotel }) {
   const C = useColorScheme();
   return (
-    <div style={{ background:C.card, border:`1px solid ${C.border}`, overflow:"hidden" }}>
-      <div style={{ background:`linear-gradient(135deg, ${C.coral}12 0%, transparent 60%)`, padding:"40px 36px", borderBottom:`1px solid ${C.border}` }}>
+    <div style={{ border:`1px solid ${C.border}`, overflow:"hidden" }}>
+      <div style={{ background:C.card, borderBottom:`2px solid ${C.coral}`, padding:"40px 36px" }}>
         <div style={{ fontSize:12, color:C.coral, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:12, fontWeight:600 }}>Client Portal</div>
         <h3 style={{ fontFamily:FONT, fontSize:"clamp(20px,2.5vw,28px)", fontWeight:600, color:C.white, marginBottom:12, lineHeight:1.2 }}>
           You will not just get content. You will get proof it is working.
@@ -439,22 +439,22 @@ function PortalBlock({ hotel }) {
           Every JMEDIA partnership includes access to a dedicated client portal that connects directly to your property management system and tracks direct booking impact over the life of our engagement.
         </p>
       </div>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr" }}>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", background:C.black }}>
         {[
           { num:"01", title:"PMS Integration", body:"The portal connects to your property management system via OAuth. Cloudbeds, Opera, Synxis, and other major platforms are supported. No manual data entry." },
           { num:"02", title:"Direct Booking Tracking", body:"See direct booking percentage, ADR, and OTA dependency updated alongside your content calendar. One dashboard tying content output to revenue outcomes." },
           { num:"03", title:"Monthly Reporting", body:"Every month you get a performance summary showing what shipped, what performed, and what the numbers look like. You own the data and the decisions." },
         ].map((item, i) => (
-          <div key={i} style={{ padding:"28px 24px", borderRight: i < 2 ? `1px solid ${C.border}` : "none" }}>
-            <div style={{ fontSize:13, color:C.coral, fontWeight:600, marginBottom:12 }}>{item.num}</div>
-            <div style={{ fontSize:17, fontWeight:600, color:C.white, marginBottom:10 }}>{item.title}</div>
-            <p style={{ fontSize:15, color:C.body, lineHeight:1.75 }}>{item.body}</p>
+          <div key={i} style={{ padding:"32px 28px", borderRight: i < 2 ? `1px solid ${C.border}` : "none", borderTop:`1px solid ${C.border}` }}>
+            <div style={{ fontSize:22, fontWeight:300, color:C.coral, marginBottom:16, lineHeight:1 }}>{item.num}</div>
+            <div style={{ fontSize:16, fontWeight:600, color:C.white, marginBottom:10 }}>{item.title}</div>
+            <p style={{ fontSize:14, color:C.body, lineHeight:1.8 }}>{item.body}</p>
           </div>
         ))}
       </div>
-      <div style={{ borderTop:`1px solid ${C.border}`, padding:"20px 36px", display:"flex", alignItems:"center", gap:16 }}>
+      <div style={{ background:C.dark, borderTop:`1px solid ${C.border}`, padding:"20px 36px", display:"flex", alignItems:"center", gap:16 }}>
         <div style={{ width:6, height:6, borderRadius:"50%", background:C.coral, flexShrink:0 }} />
-        <p style={{ fontSize:15, color:C.body, lineHeight:1.7 }}>No other video production company in the independent hotel space offers PMS-connected performance tracking. This is the difference between a vendor and a partner.</p>
+        <p style={{ fontSize:14, color:C.body, lineHeight:1.7 }}>No other video production company in the independent hotel space offers PMS-connected performance tracking. This is the difference between a vendor and a partner.</p>
       </div>
     </div>
   );
